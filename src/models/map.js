@@ -100,6 +100,8 @@ export default {
               payload: {
                 currentPage: pages,
                 pageSize: pagesizes,
+                // areaId: areaids,
+                key: keyas,                 
               }
             })          
             break;   
@@ -464,25 +466,18 @@ export default {
     // 查询详情数据
     * querydList({ payload }, { call, put }) {
       const data = yield call(dataDetailList, payload);
-      // console.log('1',data); 有问题
-      if (data.statusCode === 0) {
-        const { pageInfo } = data;
-        let dlist = [];
-        for (let i in data) {
-          if (!isNaN(Number(i))) {
-            dlist.push(data[i]);
-          }
-        }
+      if (data.statusCode === 200) {
+        const { list, pageInfo } = data;
+        console.log(1,pageInfo.totalRecords)
         yield put({
           type: 'updateState',
           payload: {
-            dlist,
-            dpagefo: {
+            dlist:list,
+            dpageInfo: {
               current: payload.currentPage,
               pageSize: payload.pageSize,
-              // areaId: payload.areaId,
-              // key: payload.key,
-              total: 13,
+              key: payload.key,
+              total: pageInfo.totalRecords,
             },
           },
         });

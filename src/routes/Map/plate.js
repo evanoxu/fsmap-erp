@@ -58,17 +58,19 @@ const MapManage = ({ map, dispatch, location, loading }) => {
   };
   // 查询数据
   const filterProps = {
+    hide:{
+      city:true
+    },
     filter: {
       ...location.query,
     },
     onFilterChange(value) {
-      console.log(value)
       const { query, pathname } = location;
       dispatch(routerRedux.push({
         pathname,
         query: {
           ...value,
-          page: query.page,
+          page: 1,
           pageSize: query.pageSize,
           status: query.status,
         },

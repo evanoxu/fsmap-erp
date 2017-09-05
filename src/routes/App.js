@@ -4,7 +4,7 @@ import pathToRegexp from 'path-to-regexp'
 import { connect } from 'dva';
 import { classnames, Config, Storage } from '../utils';
 import { Layout, Loader } from '../components';
-import '../index.css';
+import '../index.less';
 import './App.less';
 import Error from './Error';
 
