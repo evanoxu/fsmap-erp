@@ -48,8 +48,7 @@ module.exports = {
       icon: 'laptop',
       name: '版块管理',
       router: '/map/plate',
-    }
-    
+    }    
   ],
   city: [{
     value: 44,
@@ -78,5 +77,9 @@ module.exports = {
       }],
     }],
   }],
+  plate:{
+    list: 'list',
+    add: 'add',
+  },
   openPages: ['/login'],
 }

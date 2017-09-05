@@ -9,23 +9,13 @@ import PlateLoad from './plateLoad';
 import { Tabs } from 'antd';
 const TabPane = Tabs.TabPane;
 
-const Status = {
-  list: 'list',
-  add: 'add',
-}
+import { Config } from '../../utils';
+
 
 const MapManage = ({ map, dispatch, location, loading }) => {
-  const { plist, ppageInfo } = map;
+  const { plist, ppageInfo, plateLoad } = map;
   const { query = {}, pathname } = location;
   const keys = query.status;
-  if((!keys)||!(Status[keys])){
-    dispatch(routerRedux.push({
-      pathname,
-      query: {
-        status: Status.list
-      },
-    }));
-  }
   // 列表数据
   const listProps = {
     datass: plist,
@@ -79,7 +69,7 @@ const MapManage = ({ map, dispatch, location, loading }) => {
   };
 
   const PlateLoadProps = {
-
+    list:plateLoad
   }
   // 切换
   const handleTabClick = (key) => {
@@ -93,12 +83,22 @@ const MapManage = ({ map, dispatch, location, loading }) => {
 	return (
     <div className="content-inner">
       <Tabs defaultActiveKey={keys} onTabClick={handleTabClick}>
-        <TabPane tab="板块管理" key={Status.list}>
-          <Filter {...filterProps} />
-          <List {...listProps} />
+        <TabPane tab="板块管理" key={Config.plate.list}>
+          {
+            keys==Config.plate.list &&
+            <div>
+              <Filter {...filterProps} />
+              <List {...listProps} />            
+            </div>
+          }
         </TabPane>
-        <TabPane tab="划分板块" key={Status.add}>
-          <PlateLoad {...PlateLoadProps} />
+        <TabPane tab="划分板块" key={Config.plate.add}>
+          {
+            keys==Config.plate.add &&
+            <div>
+              <PlateLoad {...PlateLoadProps} />          
+            </div>
+          }        
         </TabPane>
       </Tabs>
     </div>    
