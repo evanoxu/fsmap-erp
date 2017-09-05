@@ -3,7 +3,7 @@ import { dataList, dataEdit, dataDelete, dataSave, dataNetList } from '../servic
 import { dataNetAdd, dataImportList, dataImportExcel } from '../services/mapImport';
 import { dataTypeList, dataTypeAdd, dataTypeDelete, dataTypeEdit, dataTypeSave, dataSubList, dataSubAdd, dataSubDelete, dataSubEdit, dataSubSave, dataSpeedList, dataSpeedAdd, dataSpeedDelete, dataSpeedEdit, dataSpeedSave } from '../services/mapZt';
 import { dataDetailList, dataDetailCommonet, dataDetailDelete } from '../services/mapDetail';
-import { queryURL, Storage, Config } from '../utils';
+import { queryURL, Storage } from '../utils';
 import { routerRedux } from 'dva/router';
 import * as mapPlate from '../services/mapPlate';
 
@@ -35,8 +35,7 @@ export default {
     dcurItem: {},
     // 板块数据
     plist: [],
-    ppageInfo: { current: 1, pageSize: 10, areaId: -1, key: '', total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },   
-    plateLoad: [], 
+    ppageInfo: { current: 1, pageSize: 10, areaId: -1, key: '', total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },    
   },
 
   subscriptions: {
@@ -101,41 +100,28 @@ export default {
               payload: {
                 currentPage: pages,
                 pageSize: pagesizes,
+                // areaId: areaids,
                 key: keyas,                 
               }
             })          
             break;   
           case '/map/plate':
             var pays = location.query, pages, pagesizes, areaids, keyas;
-            statuss = pays.status
-            if((!statuss)||!Config.plate[statuss]){
-              dispatch(routerRedux.push({
-                pathname:path,
-                query: {
-                  status: Config.plate.list
-                },
-              }));
-              return false
-            }
-            if(statuss=='list'){
-              pages = pays.page ? Number(pays.page) : 1;
-              pagesizes = pays.pageSize ? Number(pays.pageSize) : 10;
-              areaids = pays.area ? Number(pays.area) : -1;
-              keyas = pays.keys ? String(pays.keys) : '';
-              dispatch({
-                type: 'queryPList',
-                payload: {
-                  statuss: statuss,
-                  currentPage: pages,
-                  pageSize: pagesizes,
-                  key: keyas,                
-                }
-              })
-            }else{
-              dispatch({
-                type: 'plateLoad',
-              })              
-            }          
+            statuss = pays.status ? Number(pays.status) : 1;
+            pages = pays.page ? Number(pays.page) : 1;
+            pagesizes = pays.pageSize ? Number(pays.pageSize) : 10;
+            areaids = pays.area ? Number(pays.area) : -1;
+            keyas = pays.keys ? String(pays.keys) : '';
+            dispatch({
+              type: 'queryPList',
+              payload: {
+                statuss: statuss,
+                currentPage: pages,
+                pageSize: pagesizes,
+                areaId: areaids,
+                key: keyas,                
+              }
+            })          
             break;                                        
         }
       });
@@ -538,21 +524,7 @@ export default {
       } else {
         throw data.statusMsg;
       }
-    },   
-    * plateLoad({ }, { call, put }) {
-      const data = yield call(mapPlate.dataPlateLoad);
-      if (data.statusCode === 200) {
-        yield put({
-          type: 'updateState',
-          payload: {
-            plateLoad:data.list
-          },
-        });
-      } else {
-        throw data.statusMsg;
-      }
-    },
-
+    },    
   },
 
   reducers: {
