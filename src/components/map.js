@@ -20,17 +20,13 @@ class MapBaidu extends React.Component {
       // 启用滚轮放大缩小
       map.enableScrollWheelZoom(true);
       // 添加平移缩放控件
-      var obj = {}
-      obj.navigation = new BMap.NavigationControl();
-      map.addControl(obj.navigation);
+      map.addControl(new BMap.NavigationControl());
       // 添加比例尺到左上角
-      obj.Scale = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT})
-      map.addControl(obj.Scale);
+      map.addControl(new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT}));
       // 添加缩略图到右下角
-      obj.overview = new BMap.OverviewMapControl({isOpen:true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT})
-      map.addControl(obj.overview);
+      map.addControl(new BMap.OverviewMapControl({isOpen:true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT}));
       // 传对象出去
-      initCB(map,obj);
+      initCB(map);
     }
     loadScript('https://api.map.baidu.com/api?v=2.0&ak=CyGBwibbsem3vBvNBjwuu8sQ&callback=init','',{id:'mapbaidu'});
   }

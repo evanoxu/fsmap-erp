@@ -11,12 +11,9 @@ const Modals = ({
   ...PlateLoadProps
 }) => {
   // 获取地图信息
-  const handleMap = (obj,control) => {
+  const handleMap = (obj) => {
     const _map = obj;
     stateMap = _map;
-    stateMap.disableScrollWheelZoom();
-    stateMap.removeControl(control.navigation);
-    stateMap.removeControl(control.Scale);
   };
 
   return (

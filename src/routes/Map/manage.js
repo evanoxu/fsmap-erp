@@ -50,7 +50,7 @@ const MapManage = ({ map, dispatch, location, loading }) => {
         pathname,
         query: {
           ...value,
-          page: 1,
+          page: query.page,
           pageSize: query.pageSize,
         },
       }));

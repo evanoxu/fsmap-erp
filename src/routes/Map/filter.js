@@ -22,44 +22,30 @@ const TwoColProps = {
 
 const Filter = ({
   onFilterChange,
-  hide,
   filter,
   form: {
     getFieldDecorator,
     getFieldsValue,
     setFieldsValue,
-    resetFields,
   },
 }) => {
-  var hidecity = false
-  if(hide&&hide.city){
-    hidecity = true
-  }
+
   const handleSubmit = () => {
     let fields = getFieldsValue();
-    // if(!fields['keys']){
-    //   alert('请输入你要查询的地址!');
-    //   return false
-    // }
-    if(fields['area']){
-      fields['area']= fields['area'][2];
-    }
-
+    fields['area'] = fields['area'][2];
     onFilterChange(fields);
   }
   const handleReset = () => {
     const fields = getFieldsValue();
-
     for (let item in fields) {
       if ({}.hasOwnProperty.call(fields, item)) {
         if (fields[item] instanceof Array) {
-          fields[item] = [44, 6, -1]
+          fields[item] = []
         } else {
           fields[item] = undefined
         }
       }
     }
-
     setFieldsValue(fields)
     handleSubmit();
   }
@@ -70,24 +56,17 @@ const Filter = ({
   }
   const { keys, area } = filter;
 
-  var city = Number(area);
-  if(!city) city = -1
-
 	return (
-    <Form>
     <Row gutter={24}>
-      { !hidecity &&
-        <Col {...ColProps} xl={{ span: 4 }} md={{ span: 4 }}>
-          {getFieldDecorator('area', { initialValue: [44, 6, city] })(<Cascader
-            size="large"
-            style={{ width: '100%' }}
-            options={Config.city}
-            placeholder="请选择城市区域"
-            onChange={handleChange.bind(null, 'area')}
-          />)}
-        </Col>        
-      }
-
+      <Col {...ColProps} xl={{ span: 4 }} md={{ span: 4 }}>
+        {getFieldDecorator('area', { initialValue: [44, 6, -1] })(<Cascader
+          size="large"
+          style={{ width: '100%' }}
+          options={Config.city}
+          placeholder="请选择城市区域"
+          onChange={handleChange.bind(null, 'area')}
+        />)}
+      </Col>
       <Col {...ColProps} xl={{ span: 4 }} md={{ span: 6 }}>
         {getFieldDecorator('keys', { initialValue: keys })(<Input placeholder="请输入你要查询的地址" size="large" />)}
       </Col>
@@ -96,7 +75,6 @@ const Filter = ({
         <Button size="large" onClick={handleReset}>重置</Button>
       </Col>
     </Row>
-    </Form>
   );
 }
 
