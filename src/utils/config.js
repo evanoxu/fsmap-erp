@@ -120,5 +120,9 @@ module.exports = {
       ],
     }],
   }],
+  plate: {
+    list: 'list',
+    add: 'add',
+  },
   openPages: ['/login'],
 };
