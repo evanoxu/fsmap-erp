@@ -82,7 +82,7 @@ class PlateLoad extends React.Component {
           fillOpacity: 0.8,      //填充的透明度，取值范围0 - 1。
           strokeStyle: 'solid' //边线的样式，solid或dashed。
       }
-      console.log(window.BMapLib)
+      // console.log(window.BMapLib)
       //实例化鼠标绘制工具
       var drawingManager = new window.BMapLib.DrawingManager(_map, {
           isOpen: false, //是否开启绘制模式
@@ -107,25 +107,36 @@ class PlateLoad extends React.Component {
   addHandler(content,obj){
     var _this = this
     const { map }  = this.state
-    obj.addEventListener("dblclick",function(e){
-        if(_this.state.cilck) _this.state.cilck.disableEditing();
-        obj.enableEditing();
-        _this.setState({
-          cilck: obj
-        })
-    })    
+    var isdblclick = false
+    // obj.addEventListener("dblclick",function(e){
+    //     console.log('dblclick')
+
+    // })    
     var opts = {
       width : 250,
       height: 80,
       title : "信息窗口" ,
       enableMessage:true
     };   
+
     obj.addEventListener("click",function(e){
+      console.log('click')
       var center = obj.getBounds().getCenter()
       var point = new BMap.Point(center.lng, center.lat);
       var infoWindow = new BMap.InfoWindow('11111',opts);  // 
       map.openInfoWindow(infoWindow,point);       
-    })       
+    })     
+
+    var polygonMenu = new BMap.ContextMenu();
+    polygonMenu.addItem(new BMap.MenuItem('编辑多边形', function () {
+      if(_this.state.cilck) _this.state.cilck.disableEditing();
+      obj.enableEditing();
+      _this.setState({
+        cilck: obj
+      })
+    }));
+    obj.addContextMenu(polygonMenu);
+
   } 
 
   setZoom= (value) =>{
