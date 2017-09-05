@@ -64,11 +64,12 @@ let API = {
   dataPlateSpeedDelete: 'platespeed/admin/delete/',
   // 2.公共服务地图
   //    基础数据管理
-  publicDataType: 'publicService/ajaxType',
+  publicDataType: 'publicService/allPublicTypes',
   publicDataFind: 'publicService/findPsData',
   publicDataEdit: 'publicService/showEidtData/',
   publicDataDelete: 'publicService/deletePs/',
   publicDataSave: 'publicService/savePsData',
+  publicDataExport: 'publicService/export',
   //    基础数据导入
   publicImportLogList: 'importlog/admin/importloglist/publicService',
   publicImportUpExcel: 'upload/uploadExcel',

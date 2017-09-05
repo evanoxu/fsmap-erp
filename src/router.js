@@ -74,9 +74,18 @@ const Routers = ({ history, app }) => {
             require.ensure([], (require) => {
               registerModel(app, require('./models/map'));
               cb(null, require('./routes/Map/plate'));
-            }, 'mapimport');
+            }, 'mapplate');
           },
-        },        
+        },
+        {
+          path: 'public/manage',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/public'));
+              cb(null, require('./routes/Public/manage'));
+            }, 'publicmanage');
+          },
+        },
       ],
     },
   ];

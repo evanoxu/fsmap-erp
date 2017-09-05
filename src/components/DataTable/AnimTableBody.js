@@ -40,7 +40,7 @@ const leaveAnim = [
   },
 ];
 
-const AnimTableBody = ({ body, page = 1, current, area, keys }) => {
+const AnimTableBody = ({ body, page = 1, current }) => {
   if (current !== +page) {
     return body;
   }
@@ -62,8 +62,6 @@ AnimTableBody.propTypes = {
   body: PropTypes.element,
   page: PropTypes.any,
   current: PropTypes.number.isRequired,
-  area: PropTypes.number,
-  keys: PropTypes.string,
 };
 
 export default AnimTableBody;

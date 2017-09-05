@@ -1,8 +1,8 @@
 module.exports = {
-	name: '佛山智慧云图管理后台',
-	footerText: '佛山智慧云图管理后台 @ 2017 CORE',
-	logo: '/logo.png',
-	menus: [
+  name: '佛山智慧云图管理后台',
+  footerText: '佛山智慧云图管理后台 @ 2017 CORE',
+  logo: '/logo.png',
+  menus: [
     {
       id: 1,
       icon: 'laptop',
@@ -40,7 +40,6 @@ module.exports = {
       name: '详情管理',
       router: '/map/detail',
     },
-    
     {
       id: 15,
       bpid: 1,
@@ -48,8 +47,44 @@ module.exports = {
       icon: 'laptop',
       name: '版块管理',
       router: '/map/plate',
-    }
-    
+    },
+    {
+      id: 2,
+      icon: 'team',
+      name: '公共服务',
+    },
+    {
+      id: 21,
+      bpid: 2,
+      mpid: 2,
+      icon: 'team',
+      name: '基础数据管理',
+      router: '/public/manage',
+    },
+    {
+      id: 22,
+      bpid: 2,
+      mpid: 2,
+      icon: 'team',
+      name: '基础数据导入',
+      router: '/public/import',
+    },
+    {
+      id: 23,
+      bpid: 2,
+      mpid: 2,
+      icon: 'team',
+      name: '专题管理',
+      router: '/public/zt',
+    },
+    {
+      id: 24,
+      bpid: 2,
+      mpid: 2,
+      icon: 'team',
+      name: '详情管理',
+      router: '/public/detail',
+    },
   ],
   city: [{
     value: 44,
@@ -57,26 +92,33 @@ module.exports = {
     children: [{
       value: 6,
       label: '佛山市',
-      children: [{
-        value: 1,
-        label: '顺德区',
-      },{
-        value: 2,
-        label: '高明区',
-      },{
-        value: 3,
-        label: '三水区',
-      },{
-        value: 4,
-        label: '南海区',
-      },{
-        value: 5,
-        label: '禅城区',
-      },{
-        value: -1,
-        label: '所有',
-      }],
+      children: [
+        {
+          value: 1,
+          label: '顺德区',
+        },
+        {
+          value: 2,
+          label: '高明区',
+        },
+        {
+          value: 3,
+          label: '三水区',
+        },
+        {
+          value: 4,
+          label: '南海区',
+        },
+        {
+          value: 5,
+          label: '禅城区',
+        },
+        {
+          value: -1,
+          label: '所有',
+        },
+      ],
     }],
   }],
   openPages: ['/login'],
-}
+};
