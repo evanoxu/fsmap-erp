@@ -14,7 +14,7 @@ const TabPane = Tabs.TabPane;
 
 const Mapdetail = ({ map, dispatch, location, loading }) => {
   const { dlist, dpagefo, dtype, dcurItem, modalVisible } = map;
-
+  console.log(dpagefo)
   // 列表数据
   
   // 显示弹窗数据
@@ -108,6 +108,9 @@ const Mapdetail = ({ map, dispatch, location, loading }) => {
 
   // 查询数据
   const filterProps = {
+    hide:{
+      city:true
+    },    
     filter: {
       ...location.query,
     },
@@ -117,7 +120,7 @@ const Mapdetail = ({ map, dispatch, location, loading }) => {
         pathname,
         query: {
           ...value,
-          page: query.page,
+          page: 1,
           pageSize: query.pageSize,
         },
       }));
