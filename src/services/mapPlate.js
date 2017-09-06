@@ -25,3 +25,18 @@ import { Fetch, APIPath } from '../utils';
   }
 
 
+  export async function dataPlateDrawSave(data) {
+    return Fetch.default({
+      method: 'POST',
+      url: APIPath.DATAPLATEDRAWSAVE,
+      data: data,
+    });
+  }
+
+  
+  export async function  dataPlateCDelete(data) {
+    return Fetch.default({
+      method: 'GET',
+      url: APIPath.DATAPLATECDELETE+data.id
+    });
+  }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import Filter from './filter';
-import List from './platelist';
+import PlateList from './platelist';
 import PlateLoad from './plateLoad';
 
 import { Tabs } from 'antd';
@@ -13,7 +13,7 @@ import { Config } from '../../utils';
 
 
 const MapManage = ({ map, dispatch, location, loading }) => {
-  const { plist, ppageInfo, plateLoad } = map;
+  const { plist, ppageInfo, plateLoad, isSava, isDelete } = map;
   const { query = {}, pathname } = location;
   const keys = query.status;
   // 列表数据
@@ -33,18 +33,12 @@ const MapManage = ({ map, dispatch, location, loading }) => {
         },
       }));
     },
-    onEditItem(id) {
+    deletePlate(id) {
       dispatch({
-        type: 'map/editData',
+        type: 'map/dataPlateCDelete',
         payload: id,
       });
-    },
-    onDeleteItem(id) {
-      dispatch({
-        type: 'map/deleteData',
-        payload: id,
-      });
-    },
+    }, 
   };
   // 查询数据
   const filterProps = {
@@ -69,7 +63,21 @@ const MapManage = ({ map, dispatch, location, loading }) => {
   };
 
   const PlateLoadProps = {
-    list:plateLoad
+    isSava,
+    isDelete,
+    list:plateLoad,
+    savaPlate(id) {
+      dispatch({
+        type: 'map/dataPlateDrawSave',
+        payload: id,
+      });
+    },
+    deletePlate(id) {
+      dispatch({
+        type: 'map/dataPlateCDelete',
+        payload: id,
+      });
+    }, 
   }
   // 切换
   const handleTabClick = (key) => {
@@ -88,7 +96,7 @@ const MapManage = ({ map, dispatch, location, loading }) => {
             keys==Config.plate.list &&
             <div>
               <Filter {...filterProps} />
-              <List {...listProps} />            
+              <PlateList {...listProps} />            
             </div>
           }
         </TabPane>

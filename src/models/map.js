@@ -37,6 +37,8 @@ export default {
     plist: [],
     ppageInfo: { current: 1, pageSize: 10, areaId: -1, key: '', total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },   
     plateLoad: [], 
+    isSava:false,
+    isDelete:false,
   },
 
   subscriptions: {
@@ -540,18 +542,66 @@ export default {
       }
     },   
     * plateLoad({ }, { call, put }) {
+      yield put({
+        type: 'updateState',
+        payload: {
+          plateLoad: [],
+          isSava:false,
+          isDelete:false,
+        },
+      });      
       const data = yield call(mapPlate.dataPlateLoad);
       if (data.statusCode === 200) {
         yield put({
           type: 'updateState',
           payload: {
-            plateLoad:data.list
+            plateLoad: data.list
           },
         });
       } else {
         throw data.statusMsg;
       }
     },
+    * dataPlateDrawSave({payload}, { call, put }) { 
+      yield put({
+        type: 'updateState',
+        payload: {
+          isSava:false,
+          isDelete:false,
+        },
+      });         
+      const data = yield call(mapPlate.dataPlateDrawSave,payload);
+      if (data.statusCode === 200) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            isSava: true,
+          },
+        });
+      } else {
+        throw data.statusMsg;
+      }
+    },
+    * dataPlateCDelete({payload}, { call, put }) {     
+      yield put({
+        type: 'updateState',
+        payload: {
+          isSava:false,
+          isDelete:false,
+        },
+      });       
+      const data = yield call(mapPlate.dataPlateCDelete,payload);
+      if (data.statusCode === 200) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            isDelete: true,
+          },
+        });
+      } else {
+        throw data.statusMsg;
+      }
+    },    
 
   },
 

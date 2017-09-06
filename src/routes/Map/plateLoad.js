@@ -7,10 +7,10 @@ import { loadScript, DelScript } from '../../utils';
 
 import { Form, Button, Row, Col, Input, Cascader } from 'antd';
 
-// 设置地图对象
+// //设置地图对象
 // let stateMap = {};
-// let isload = false;
-// const PlateLoad = ({list,...PlateLoadProps }) => {
+// // let isload = false;
+// const PlateLoad = ({list, ...PlateLoadProps }) => {
 //   // 获取地图信息
 //   const handleMap = (obj,control) => {
 //     const _map = obj;
@@ -20,9 +20,10 @@ import { Form, Button, Row, Col, Input, Cascader } from 'antd';
 //     stateMap.removeControl(control.Scale);
 //   };
 
+//   console.log(list)
 //   if(list.length){
-//     if(isload) return;
-//     isload = true;
+//     // if(isload) return;
+//     // isload = true;
 //     for (var i = 0; i < list.length; i++) {
 //         var Polygonid = list[i].id;
 //         var PolygonPoint = list[i].lnglat;
@@ -65,13 +66,16 @@ class PlateLoad extends React.Component {
     _map.removeControl(control.navigation);
     _map.removeControl(control.Scale);
     _map.disableDoubleClickZoom()
+    _map.disableContinuousZoom()  
     setTimeout(function(){
       var overlays = [];
       var overlaycomplete = function(e){
-        _map.disableDoubleClickZoom()
-        _map.disablePinchToZoom()        
+        drawingManager.close()
         overlays.push(e.overlay);
-        _this.addHandler({},e.overlay)
+        _this.addHandler('',e.overlay)
+        this.setState({
+          overlays,
+        })
       };
 
       var styleOptions = {
@@ -86,73 +90,132 @@ class PlateLoad extends React.Component {
       //实例化鼠标绘制工具
       var drawingManager = new window.BMapLib.DrawingManager(_map, {
           isOpen: false, //是否开启绘制模式
-          enableDrawingTool: true, //是否显示工具栏
+          enableDrawingTool: false, //是否显示工具栏
           drawingToolOptions: {
               anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
               offset: new window.BMap.Size(5, 5), //偏离值
+              scale:1
           },
           rectangleOptions: styleOptions //矩形的样式
-      });  
-     //添加鼠标绘制工具监听事件，用于获取绘制结果
-      drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+      });   
+
+      _map.disableScrollWheelZoom()
       _map.disableDoubleClickZoom()
-      _map.disablePinchToZoom()
-    },2000)
+      _map.disablePinchToZoom()        
+
+      //DrawingManager 缩放去除
+      drawingManager.addEventListener('overlaycomplete', overlaycomplete); 
+      _map.addEventListener("click",function(e){
+        _map.disableDoubleClickZoom()
+      })             
+    },500)
 
     this.setState({
       map: _map
-    })  
+    })
+
+    //
+    window.savaPlate = function(id){
+      var name = document.getElementById('Polygon').value
+      if(!name){
+        alert('请输入区块名称！')
+        return false;
+      }
+      var path = ''
+      if(id){
+        path = _this.state.json[id].getPath()
+      }else{
+        path = ''
+      }
+      var pathArr = []
+      path.map(function(g,i){
+        pathArr.push(g.lng+','+g.lat)
+      })
+      var query= {
+        name: name,
+        levels: '12,13,14,15,16,17,18,19',
+        lnglat: pathArr.join(';')
+      }
+      if(id) query.id = id 
+       _this.props.savaPlate(query)
+    }  
+
+    // 删除
+    window.deletePlate = function(id){
+      if(id){
+        var query = {
+          id: id
+        }
+        _this.props.deletePlate(query)
+      }else{
+        obj.hide()
+        map.closeInfoWindow()
+      }
+    }         
   };
 
   addHandler(content,obj){
     var _this = this
     const { map }  = this.state
-    var isdblclick = false
-    // obj.addEventListener("dblclick",function(e){
-    //     console.log('dblclick')
+    var html = '<p><input type="text" value="" id="Polygon"/></p><p><a onclick="savaPlate()">保存</a></p><p><a onclick="deletePlate()">删除</a></p>'
+    if(content){
+      html = '</p><input type="text" value="'+content.name+'" id="Polygon"/></p><p><a onclick="savaPlate('+content.id+')">保存</a></p><p><a onclick="deletePlate('+content.id+')">删除</a></p>'
+    }
 
-    // })    
-    var opts = {
-      width : 250,
-      height: 80,
-      title : "信息窗口" ,
-      enableMessage:true
-    };   
 
+    // 点击保存删除      
     obj.addEventListener("click",function(e){
-      console.log('click')
+      if(_this.state.cilck){
+        _this.state.cilck.disableEditing();
+        _this.setState({
+          cilck: ''
+        })         
+      }
       var center = obj.getBounds().getCenter()
       var point = new BMap.Point(center.lng, center.lat);
-      var infoWindow = new BMap.InfoWindow('11111',opts);  // 
+      var infoWindow = new BMap.InfoWindow(html,{
+        width : 250,
+        height: 80,
+      });
       map.openInfoWindow(infoWindow,point);       
-    })     
+    }) 
 
-    var polygonMenu = new BMap.ContextMenu();
-    polygonMenu.addItem(new BMap.MenuItem('编辑多边形', function () {
-      if(_this.state.cilck) _this.state.cilck.disableEditing();
-      obj.enableEditing();
-      _this.setState({
-        cilck: obj
-      })
-    }));
-    obj.addContextMenu(polygonMenu);
-
+    // 右键编辑
+    obj.addEventListener("rightclick",function(e){
+      if(_this.state.cilck==obj){
+        obj.disableEditing();
+        _this.setState({
+          cilck: ''
+        })        
+      }else{
+        if(_this.state.cilck) _this.state.cilck.disableEditing();
+        obj.enableEditing();
+        _this.setState({
+          cilck: obj
+        })
+      }
+    });
   } 
 
   setZoom= (value) =>{
-      const { map } = this.state
-      var _this = this
-      if(!map) return
-      map.setZoom(value)
-      _this.setState({
-        cilck: ''
-      })
+    const { map } = this.state
+    var _this = this
+    if(!map) return
+    map.setZoom(value)
+    _this.setState({
+      cilck: ''
+    })
   }
+  componentWillUnmount(){
+    DelScript('DrawingManager')
+    window.savaPlate = window.deletePlate = null;
+  }  
   componentWillReceiveProps(nextProps){
-    const { list } = nextProps;
+    const { list,isDelete,isSava } = nextProps;
     const { map } = this.state
     var len = this.props.list.length
     if(len!==nextProps.list.length){
+      var json = {}
       for (var i = 0; i < list.length; i++) {
           var Polygonid = list[i].id;
           var PolygonPoint = list[i].lnglat;
@@ -162,13 +225,25 @@ class PlateLoad extends React.Component {
               var _point = PolygonPointArr[j].split(',');
               PolygonJSON.push(new window.BMap.Point(_point[0],_point[1]));
           }
+         
           var polygon = new window.BMap.Polygon(PolygonJSON,{fillColor:'#758dd3',fillOpacity:0.8, strokeWeight:0.01, strokeOpacity:0});
           map.addOverlay(polygon);
           var content = list[i]
+           // console.log(content.name,content.id,content.lnglat)
+          json[Polygonid] = polygon
           this.addHandler(content,polygon);
       }  
-    }        
-    }
+      this.setState({
+        json,
+      })
+    } 
+    if(isSava!==this.props.isSava){
+      if(isSava) map.closeInfoWindow()
+    } 
+    if(isDelete!==this.props.isDelete){
+      if(isDelete) map.closeInfoWindow()
+    }          
+  }
   render () {
     const zoom = [12,13,14,15,16,17,18,19]
     return (

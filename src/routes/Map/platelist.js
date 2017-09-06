@@ -5,7 +5,8 @@ import { classnames } from '../../utils';
 import AnimTableBody from '../../components/DataTable/AnimTableBody';
 import styles from './list.less';
 
-const List = ({ datass, location, loading, onDeleteItem, onEditItem, ...tableProps }) => {
+const PlateList = ({ datass, location, loading, deletePlate, onEditItem, ...listProps }) => {
+
   const columns = [
     {
       title: '名称',
@@ -41,18 +42,18 @@ const List = ({ datass, location, loading, onDeleteItem, onEditItem, ...tablePro
 
   // 获取编辑信息
   const handleEditClick = (id) => {
-    onEditItem(id);
+    //onEditItem(id);
   }
 
   // 删除地图基础数据
   const handleDeleteClick = (id) => {
-     onDeleteItem(id);
+     deletePlate({id:id});
   };
 
   // 设置页面数据
   const getBodyWrapperProps = {
     page: location.query.page,
-    current: tableProps.pagination.current,
+    current: listProps.pagination.current,
   };
   const getBodyWrapper = (body) => {
     return <AnimTableBody {...getBodyWrapperProps} body={body} />;
@@ -60,7 +61,7 @@ const List = ({ datass, location, loading, onDeleteItem, onEditItem, ...tablePro
   return (
     <div>
       <Table
-        {...tableProps}
+        {...listProps}
         className={classnames({ [styles.table]: true })}
         columns={columns}
         dataSource={datass}
@@ -72,12 +73,12 @@ const List = ({ datass, location, loading, onDeleteItem, onEditItem, ...tablePro
   );
 };
 
-List.propTypes = {
-  datass: PropTypes.array,
-  pagination: PropTypes.object,
-  location: PropTypes.object,
-  onDeleteItem: PropTypes.func,
-  onEditItem: PropTypes.func,
-};
+// List.propTypes = {
+//   datass: PropTypes.array,
+//   pagination: PropTypes.object,
+//   location: PropTypes.object,
+//   onDeleteItem: PropTypes.func,
+//   onEditItem: PropTypes.func,
+// };
 
-export default List;
+export default PlateList;
