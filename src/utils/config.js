@@ -47,7 +47,6 @@ module.exports = {
       icon: 'laptop',
       name: '版块管理',
       router: '/map/plate',
-<<<<<<< HEAD
     },
     {
       id: 2,
@@ -86,10 +85,6 @@ module.exports = {
       name: '详情管理',
       router: '/public/detail',
     },
-=======
-    }
-    
->>>>>>> parent of 85fa66c... fs
   ],
   city: [{
     value: 44,
@@ -125,12 +120,9 @@ module.exports = {
       ],
     }],
   }],
-<<<<<<< HEAD
   plate: {
     list: 'list',
     add: 'add',
   },
-=======
->>>>>>> parent of 85fa66c... fs
   openPages: ['/login'],
 };

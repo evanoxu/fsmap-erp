@@ -1,21 +1,11 @@
 
-html, body, :global(#root) {
-  height: 100%;
-  background-color: #f8f8f8;
-}
+:global{
 
-:global(#allmap) {
-	width: 100%;
-	height: 450px;
-};
+	html, body, #root {
+	  height: 100%;
+	  background-color: #f8f8f8;
+	}
 
-<<<<<<< HEAD
-
-
-:global(.anchorBL){
-	display: none;
-}
-=======
 	#allmap {
 		width: 100%;
 		height: 450px;
@@ -24,5 +14,20 @@ html, body, :global(#root) {
 	.anchorBL{
 		display: none;
 	}	
+	.BMapLib_Drawing_panel{height:47px;border:1px solid #666;border-radius:5px;overflow:hidden;box-shadow:1px 1px 3px rgba(0,0,0,0.3);float:left}
+	.BMapLib_Drawing .BMapLib_box{border-right:1px solid #d2d2d2;float:left;height:100%;width:64px;height:100%;background-image:url(http://api.map.baidu.com/library/DrawingManager/1.4/src/bg_drawing_tool.png);cursor:pointer}
+	.BMapLib_Drawing .BMapLib_last{border-right:0}
+	.BMapLib_Drawing .BMapLib_hander{background-position:0 0}
+	.BMapLib_Drawing .BMapLib_hander_hover{background-position:0 -52px}
+	.BMapLib_Drawing .BMapLib_marker{background-position:-65px 0;display:none}
+	.BMapLib_Drawing .BMapLib_marker_hover{background-position:-65px -52px}
+	.BMapLib_Drawing .BMapLib_circle{background-position:-130px 0;display:none}
+	.BMapLib_Drawing .BMapLib_circle_hover{background-position:-130px -52px}
+	.BMapLib_Drawing .BMapLib_polyline{background-position:-195px 0;display:none}
+	.BMapLib_Drawing .BMapLib_polyline_hover{background-position:-195px -52px}
+	.BMapLib_Drawing .BMapLib_polygon{background-position:-260px 0;display:none}
+	.BMapLib_Drawing .BMapLib_polygon_hover{background-position:-260px -52px}
+	.BMapLib_Drawing .BMapLib_rectangle{background-position:-325px 0}
+	.BMapLib_Drawing .BMapLib_rectangle_hover{background-position:-325px -52px}	
+	
 }
->>>>>>> parent of 85fa66c... fs
