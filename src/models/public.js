@@ -1,6 +1,7 @@
 import { publicDataType, publicDataFind, publicDataEdit, publicDataDelete, publicDataSave } from '../services/publicManage';
 import { publicImportLogList, publicImportExcel } from '../services/publicImport';
 import { publicTypeList, publicTypeEidt, publicTypeSave, publicTypeDelete, publicTypeCheck, publicTypeAdd, publicTypeUpPic, publicSubTypeList, publicSubTypeEdit, publicSubTypeSave, publicSubTypeDelete, publicTypePage, publicSubTypeCheck, publicTypePicList, publicSubTypeAdd } from '../services/publicZt';
+import { publicDetailList, publicDetailComment, publicDetailDelete } from '../services/publicDetail';
 
 import { queryURL, Storage } from '../utils';
 import { routerRedux } from 'dva/router';
@@ -23,6 +24,11 @@ export default {
     zkey: '1',
     ztype: 'add',
     zcurItem: {},
+    // 详情数据
+    dlist: [],
+    dpagefo: { current: 1, pageSize: 10, key: '', total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
+    dtype: 0,
+    dcurItem: {},
   },
 
   subscriptions: {
@@ -74,6 +80,22 @@ export default {
               status: statuss,
               currentPage: pages,
               pageSize: pagesizes,
+            }
+          })
+        } else if (location.pathname === '/public/detail') {
+          // 设置初始参数
+          let pays = location.query, pages, pagesizes, areaids, keyas;
+          pages = pays.page ? Number(pays.page) : 1;
+          pagesizes = pays.pageSize ? Number(pays.pageSize) : 10;
+          areaids = pays.area ? Number(pays.area) : 1;
+          keyas = pays.keys ? String(pays.keys) : '';
+          dispatch({
+            type: 'querydList',
+            payload: {
+              currentPage: pages,
+              pageSize: pagesizes,
+              evaluationNo: keyas,
+              subTypeValue: areaids,
             }
           })
         }
@@ -393,6 +415,54 @@ export default {
       }
       if (data.statusCode === 200) {
         yield put(routerRedux.push('/public/zt?status='+zkey));
+      } else {
+        throw data.statusMsg;
+      }
+    },
+    /* detail */
+    // 查询详情数据
+    * querydList({ payload }, { call, put }) {
+      const data = yield call(publicDetailList, payload);
+      // console.log('1',data);
+      if (data.statusCode === 0) {
+        const { pageInfo } = data;
+        let dlist = [];
+        for (let i in data) {
+          if (!isNaN(Number(i))) {
+            dlist.push(data[i]);
+          }
+        }
+        yield put({
+          type: 'updateState',
+          payload: {
+            dlist,
+            dpagefo: {
+              current: payload.currentPage,
+              pageSize: payload.pageSize,
+              evaluationNo: payload.evaluationNo,
+              subTypeValue: payload.subTypeValue,
+              total: 3,
+            },
+          },
+        });
+      } else {
+        throw data.statusMsg;
+      }
+    },
+    // 查看图片或点评数据
+    * detailCommonet({ payload }, { call, put }) {
+      const { type } = payload;
+      const data = yield call(publicDetailComment, payload);
+      if (data.statusCode === 200 && typeof(data.list) != 'undefined') {
+        const { list, pageInfo } = data;
+        const dcurItem = { list, pageInfo };
+        yield put({
+          type: 'showModal',
+          payload: {
+            dcurItem,
+            dtype: type,
+          },
+        });
       } else {
         throw data.statusMsg;
       }

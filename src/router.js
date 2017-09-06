@@ -104,6 +104,15 @@ const Routers = ({ history, app }) => {
             }, 'publiczt');
           },
         },
+        {
+          path: 'public/detail',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/public'));
+              cb(null, require('./routes/Public/detail'));
+            }, 'publicdetail');
+          },
+        },
       ],
     },
   ];

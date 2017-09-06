@@ -20,6 +20,7 @@ const TwoColProps = {
 
 const Filter = ({
   pType,
+  details,
   onFilterChange,
   filter,
   form: {
@@ -30,8 +31,12 @@ const Filter = ({
 }) => {
   const handleSubmit = () => {
     let fields = getFieldsValue();
-    fields['subArea'] = fields['area'][1];
-    fields['area'] = fields['area'][0];
+    if (details) {
+      fields['area'] = fields['area'][1];
+    } else {
+      fields['subArea'] = fields['area'][1];
+      fields['area'] = fields['area'][0];
+    }
     onFilterChange(fields);
   };
   const handleReset = () => {
@@ -84,6 +89,7 @@ const Filter = ({
 
 Filter.propTypes = {
   pType: PropTypes.array,
+  details: PropTypes.bool,
   form: PropTypes.object,
   filter: PropTypes.object,
   onFilterChange: PropTypes.func,
