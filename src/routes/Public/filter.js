@@ -28,7 +28,6 @@ const Filter = ({
     setFieldsValue,
   },
 }) => {
-
   const handleSubmit = () => {
     let fields = getFieldsValue();
     fields['subArea'] = fields['area'][1];
@@ -40,9 +39,9 @@ const Filter = ({
     for (let item in fields) {
       if ({}.hasOwnProperty.call(fields, item)) {
         if (fields[item] instanceof Array) {
-          fields[item] = [1,1]
+          fields[item] = [1,1];
         } else {
-          fields[item] = undefined
+          fields[item] = undefined;
         }
       }
     }
@@ -76,18 +75,18 @@ const Filter = ({
         {getFieldDecorator('keys', { initialValue: keys })(<Search placeholder="输入要查询的关键词" size="large" />)}
       </Col>
       <Col {...TwoColProps} md={{ span: 8 }}>
-        <Button type="primary" size="large" style={{marginRight: 16}} onClick={handleSubmit}>查询</Button>
+        <Button type="primary" size="large" style={{ marginRight: 16 }} onClick={handleSubmit}>查询</Button>
         <Button size="large" onClick={handleReset}>重置</Button>
       </Col>
     </Row>
   );
-}
+};
 
 Filter.propTypes = {
   pType: PropTypes.array,
   form: PropTypes.object,
   filter: PropTypes.object,
   onFilterChange: PropTypes.func,
-}
+};
 
-export default Form.create()(Filter)
+export default Form.create()(Filter);

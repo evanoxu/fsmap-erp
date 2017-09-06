@@ -73,7 +73,7 @@ let API = {
   //    基础数据导入
   publicImportLogList: 'importlog/admin/importloglist/publicService',
   publicImportUpExcel: 'upload/uploadExcel',
-  publicImportExcel: 'admin/publicService/importExcel',
+  publicImportExcel: 'merchant/admin/publicService/importExcel',
   //    专题管理
   publicTypeList: 'type/publicSerrviceTypeList',
   publicTypeAdd: 'type/savePublicServiceType',

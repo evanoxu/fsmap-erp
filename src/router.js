@@ -16,7 +16,7 @@ const Routers = ({ history, app }) => {
     {
       path: '/',
       component: App,
-      getIndexRoute (nextState, cb) {
+      getIndexRoute(nextState, cb) {
         require.ensure([], (require) => {
           registerModel(app, require('./models/map'));
           cb(null, { component: require('./routes/Map/manage') });
@@ -84,6 +84,24 @@ const Routers = ({ history, app }) => {
               registerModel(app, require('./models/public'));
               cb(null, require('./routes/Public/manage'));
             }, 'publicmanage');
+          },
+        },
+        {
+          path: 'public/import',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/public'));
+              cb(null, require('./routes/Public/import'));
+            }, 'publicimport');
+          },
+        },
+        {
+          path: 'public/zt',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/public'));
+              cb(null, require('./routes/Public/zt'));
+            }, 'publiczt');
           },
         },
       ],

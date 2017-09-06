@@ -15,14 +15,14 @@ const PublicManage = ({ pub, dispatch, location, loading }) => {
   // 设置大小类
   const pType = ntype.map(function (t, i) {
     let das = t.typeList.map(function(tt, i) {
-      const { subTypeName, subTypeValue, id } = tt
+      const { subTypeName, subTypeValue, id } = tt;
       const datas = {
         'label': subTypeName,
         'value': subTypeValue,
         'ids': id,
-      }
+      };
       return datas;
-    })
+    });
     return {
       'label': t.typeName,
       'value': t.typeValue,
@@ -150,7 +150,7 @@ const PublicManage = ({ pub, dispatch, location, loading }) => {
     dispatch({
       type: 'pub/deleteData',
       payload: id,
-    })
+    });
   };
   // 设置页面数据
   const getBodyWrapperProps = {

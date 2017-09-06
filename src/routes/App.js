@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import pathToRegexp from 'path-to-regexp'
+import pathToRegexp from 'path-to-regexp';
 import { connect } from 'dva';
-import { classnames, Config, Storage } from '../utils';
+import { Config, Storage } from '../utils';
 import { Layout, Loader } from '../components';
 import '../index.less';
 import './App.less';
@@ -31,7 +31,7 @@ const App = ({ children, app, dispatch, loading, location }) => {
     menu,
     changeOpenKeys(openKeys) {
       Storage.setStorage('navOpenKeys', openKeys);
-      dispatch({ type: 'app/handleNavOpenKeys', payload: { navOpenKeys: openKeys } })
+      dispatch({ type: 'app/handleNavOpenKeys', payload: { navOpenKeys: openKeys } });
     },
     navOpenKeys,
   };
