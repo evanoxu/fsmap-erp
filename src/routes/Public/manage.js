@@ -70,7 +70,7 @@ const PublicManage = ({ pub, dispatch, location, loading }) => {
         type: 'pub/hideModal',
       });
     },
-  }
+  };
 
   // 列表数据
   const listProps = {

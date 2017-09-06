@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Modal, Cascader, Row, Col } from 'antd';
-import { Config, querySetParam, arrayToType } from '../../utils';
 import { BDMap } from '../../components';
 
 const FormItem = Form.Item;
@@ -31,7 +30,6 @@ const Modals = ({
   },
   ...modalProps
 }) => {
-
   // 提交按钮
   const handleOk = () => {
     validateFields((errors) => {
@@ -244,6 +242,6 @@ Modals.propTypes = {
   item: PropTypes.object,
   onOk: PropTypes.func,
   form: PropTypes.object.isRequired,
-}
+};
 
 export default Form.create()(Modals);

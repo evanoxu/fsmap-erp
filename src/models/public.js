@@ -36,9 +36,9 @@ export default {
             payload: {
               currentPage: pages,
               pageSize: pagesizes,
-              area: areas,
-              subArea: subareas,
-              key: keyas,
+              typeValue: areas,
+              subTypeValue: subareas,
+              name: keyas,
             },
           });
         }
@@ -84,9 +84,9 @@ export default {
             pageInfo: {
               current: payload.currentPage,
               pageSize: payload.pageSize,
-              typeValue: payload.area,
-              subTypeValue: payload.subArea,
-              name: payload.key,
+              typeValue: payload.typeValue,
+              subTypeValue: payload.subTypeValue,
+              name: payload.name,
               total: pageInfo.totalRecords,
             },
           },
@@ -138,9 +138,9 @@ export default {
           payload: {
             currentPage: pages,
             pageSize: pagesizes,
-            area: areas,
-            subArea: subareas,
-            key: keyas,
+            typeValue: areas,
+            subTypeValue: subareas,
+            name: keyas,
           },
         });
       } else {
@@ -168,9 +168,9 @@ export default {
           payload: {
             currentPage: pages,
             pageSize: pagesizes,
-            area: areas,
-            subArea: subareas,
-            key: keyas,
+            typeValue: areas,
+            subTypeValue: subareas,
+            name: keyas,
           },
         });
       } else {

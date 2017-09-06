@@ -34,7 +34,7 @@ const Filter = ({
     fields['subArea'] = fields['area'][1];
     fields['area'] = fields['area'][0];
     onFilterChange(fields);
-  }
+  };
   const handleReset = () => {
     const fields = getFieldsValue();
     for (let item in fields) {
@@ -48,13 +48,24 @@ const Filter = ({
     }
     setFieldsValue(fields);
     handleSubmit();
+  };
+  const { keys, area, subArea } = filter;
+  let areas = [];
+  if (area) {
+    areas.push(parseInt(area));
+  } else {
+    areas.push(1);
   }
-  const { keys } = filter;
+  if (subArea) {
+    areas.push(parseInt(subArea));
+  } else {
+    areas.push(1);
+  }
 
   return (
     <Row gutter={24}>
       <Col {...ColProps} md={{ span: 6 }}>
-        {getFieldDecorator('area', { initialValue: [1,1] })(<Cascader 
+        {getFieldDecorator('area', { initialValue: areas })(<Cascader 
           size="large" 
           style={{ width: '100%' }} 
           options={pType} 
