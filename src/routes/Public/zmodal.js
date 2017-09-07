@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, InputNumber, Modal, Row, Col, Radio, Upload, message, Select } from 'antd';
+import { Form, Input, Modal, Row, Col, Upload, message, Select } from 'antd';
 
 import { APIPath } from '../../utils';
-
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -30,7 +29,6 @@ const Modals = ({
   },
   ...modalProps
 }) => {
-
   // 提交按钮
   const handleOk = () => {
     validateFields((errors) => {
@@ -42,9 +40,9 @@ const Modals = ({
         zkey,
       };
       if (zkey == '2') {
-        const asd = pType.filter(function(v,i){
-          return v.label == data.typeName
-        })
+        const asd = pType.filter(function (v, i) {
+          return v.label == data.typeName;
+        });
         data.typeValue = asd[0].value;
       }
       // console.log('提交',data);
@@ -145,7 +143,7 @@ const Modals = ({
       return true;
     }
   };
-  const selectOption = pType.map(sels => <Option key={sels.label}>{sels.label}</Option>)
+  const selectOption = pType.map(sels => <Option key={sels.label}>{sels.label}</Option>);
 
   // console.log('modal', zkey, item);
 
@@ -154,98 +152,90 @@ const Modals = ({
       <Modal width={400} {...modalOpts}>
         <Form layout="horizontal">
           <FormItem label="公共服务分类" {...formItemLayout}>
-              {getFieldDecorator('typeName', {
-                initialValue: item.typeName,
-                rules: [
-                  {
-                    required: true,
-                  },
-                ],
-              })(<Input placeholder="输入公共服务分类名" />)}
+            {getFieldDecorator('typeName', {
+              initialValue: item.typeName,
+              rules: [
+                {
+                  required: true,
+                },
+              ],
+            })(<Input placeholder="输入公共服务分类名" />)}
           </FormItem>
           <FormItem label="图标（未选中）" {...formItemLayout}>
-              <Row>
-                <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px'}}>
-                  <img width="20" height="20" src={deTypePic} />
-                </Col>
-                <Col span={20}>
-                  <Upload {...propss} onChange={handlePicChange.bind(null, 'typepic')} beforeUpload={handlePicUpload}>
-                    {getFieldDecorator('typePic', {
-                      initialValue: item.typePic,
-                      rules: [
-                        {
-                          required: true,
-                        },
-                      ],
-                    })(
-                    <Input size="large" placeholder="点击选择新图片" disabled />
-                    )}
-                  </Upload>
-                </Col>
-              </Row>
+            <Row>
+              <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px' }}>
+                <img width="20" height="20" src={deTypePic} />
+              </Col>
+              <Col span={20}>
+                <Upload {...propss} onChange={handlePicChange.bind(null, 'typepic')} beforeUpload={handlePicUpload}>
+                  {getFieldDecorator('typePic', {
+                    initialValue: item.typePic,
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(<Input size="large" placeholder="点击选择新图片" disabled />)}
+                </Upload>
+              </Col>
+            </Row>
           </FormItem>
           <FormItem label="图标（选中）" {...formItemLayout}>
-              <Row>
-                <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px'}}>
-                  <img width="20" height="20" src={deTypePicOn} />
-                </Col>
-                <Col span={20}>
-                  <Upload {...propss} onChange={handlePicChange.bind(null, 'typepicon')} beforeUpload={handlePicUpload}>
-                    {getFieldDecorator('typePicOn', {
-                      initialValue: item.typePicOn,
-                      rules: [
-                        {
-                          required: true,
-                        },
-                      ],
-                    })(
-                    <Input size="large" placeholder="点击选择新图片" disabled />
-                    )}
-                  </Upload>
-                </Col>
-              </Row>
+            <Row>
+              <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px' }}>
+                <img width="20" height="20" src={deTypePicOn} />
+              </Col>
+              <Col span={20}>
+                <Upload {...propss} onChange={handlePicChange.bind(null, 'typepicon')} beforeUpload={handlePicUpload}>
+                  {getFieldDecorator('typePicOn', {
+                    initialValue: item.typePicOn,
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(<Input size="large" placeholder="点击选择新图片" disabled />)}
+                </Upload>
+              </Col>
+            </Row>
           </FormItem>
           <FormItem label="定位图标（小）" {...formItemLayout}>
-              <Row>
-                <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px'}}>
-                  <img width="20" height="20" src={deTypeSmallPic} />
-                </Col>
-                <Col span={20}>
-                  <Upload {...propss} onChange={handlePicChange.bind(null, 'subsmallpic')} beforeUpload={handlePicUpload}>
-                    {getFieldDecorator('subSmallPic', {
-                      initialValue: item.subSmallPic,
-                      rules: [
-                        {
-                          required: true,
-                        },
-                      ],
-                    })(
-                    <Input size="large" placeholder="点击选择新图片" disabled />
-                    )}
-                  </Upload>
-                </Col>
-              </Row>
+            <Row>
+              <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px' }}>
+                <img width="20" height="20" src={deTypeSmallPic} />
+              </Col>
+              <Col span={20}>
+                <Upload {...propss} onChange={handlePicChange.bind(null, 'subsmallpic')} beforeUpload={handlePicUpload}>
+                  {getFieldDecorator('subSmallPic', {
+                    initialValue: item.subSmallPic,
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(<Input size="large" placeholder="点击选择新图片" disabled />)}
+                </Upload>
+              </Col>
+            </Row>
           </FormItem>
           <FormItem label="定位图标（大）" {...formItemLayout}>
-              <Row>
-                <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px'}}>
-                  <img width="20" height="20" src={deTypeBigPic} />
-                </Col>
-                <Col span={20}>
-                  <Upload {...propss} onChange={handlePicChange.bind(null, 'subbigpic')} beforeUpload={handlePicUpload}>
-                    {getFieldDecorator('subBigPic', {
-                      initialValue: item.subBigPic,
-                      rules: [
-                        {
-                          required: true,
-                        },
-                      ],
-                    })(
-                    <Input size="large" placeholder="点击选择新图片" disabled />
-                    )}
-                  </Upload>
-                </Col>
-              </Row>
+            <Row>
+              <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px' }}>
+                <img width="20" height="20" src={deTypeBigPic} />
+              </Col>
+              <Col span={20}>
+                <Upload {...propss} onChange={handlePicChange.bind(null, 'subbigpic')} beforeUpload={handlePicUpload}>
+                  {getFieldDecorator('subBigPic', {
+                    initialValue: item.subBigPic,
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(<Input size="large" placeholder="点击选择新图片" disabled />)}
+                </Upload>
+              </Col>
+            </Row>
           </FormItem>
         </Form>
       </Modal>
@@ -255,114 +245,105 @@ const Modals = ({
       <Modal width={400} {...modalOpts}>
         <Form layout="horizontal">
           <FormItem label="公共服务分类" {...formItemLayout}>
-              {getFieldDecorator('typeName', {
-                initialValue: item.typeName,
-                rules: [
-                  {
-                    required: true,
-                  },
-                ],
-              })(<Select placeholder="选择公共服务分类名">{selectOption}</Select>)}
+            {getFieldDecorator('typeName', {
+              initialValue: item.typeName,
+              rules: [
+                {
+                  required: true,
+                },
+              ],
+            })(<Select placeholder="选择公共服务分类名">{selectOption}</Select>)}
           </FormItem>
           <FormItem label="公共服务子类" {...formItemLayout}>
-              {getFieldDecorator('subTypeName', {
-                initialValue: item.subTypeName,
-                rules: [
-                  {
-                    required: true,
-                  },
-                ],
-              })(<Input placeholder="输入公共服务子类名" />)}
+            {getFieldDecorator('subTypeName', {
+              initialValue: item.subTypeName,
+              rules: [
+                {
+                  required: true,
+                },
+              ],
+            })(<Input placeholder="输入公共服务子类名" />)}
           </FormItem>
           <FormItem label="图标（未选中）" {...formItemLayout}>
-              <Row>
-                <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px'}}>
-                  <img width="20" height="20" src={subTypePic} />
-                </Col>
-                <Col span={20}>
-                  <Upload {...propss} onChange={handleSPicChange.bind(null, 'subtypepic')} beforeUpload={handleSPicUpload}>
-                    {getFieldDecorator('subTypePic', {
-                      initialValue: item.subTypePic,
-                      rules: [
-                        {
-                          required: true,
-                        },
-                      ],
-                    })(
-                    <Input size="large" placeholder="点击选择新图片" disabled />
-                    )}
-                  </Upload>
-                </Col>
-              </Row>
+            <Row>
+              <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px' }}>
+                <img width="20" height="20" src={subTypePic} />
+              </Col>
+              <Col span={20}>
+                <Upload {...propss} onChange={handleSPicChange.bind(null, 'subtypepic')} beforeUpload={handleSPicUpload}>
+                  {getFieldDecorator('subTypePic', {
+                    initialValue: item.subTypePic,
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(<Input size="large" placeholder="点击选择新图片" disabled />)}
+                </Upload>
+              </Col>
+            </Row>
           </FormItem>
           <FormItem label="图标（选中）" {...formItemLayout}>
-              <Row>
-                <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px'}}>
-                  <img width="20" height="20" src={subTypePicOn} />
-                </Col>
-                <Col span={20}>
-                  <Upload {...propss} onChange={handleSPicChange.bind(null, 'subtypepicon')} beforeUpload={handleSPicUpload}>
-                    {getFieldDecorator('subTypePicOn', {
-                      initialValue: item.subTypePicOn,
-                      rules: [
-                        {
-                          required: true,
-                        },
-                      ],
-                    })(
-                    <Input size="large" placeholder="点击选择新图片" disabled />
-                    )}
-                  </Upload>
-                </Col>
-              </Row>
+            <Row>
+              <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px' }}>
+                <img width="20" height="20" src={subTypePicOn} />
+              </Col>
+              <Col span={20}>
+                <Upload {...propss} onChange={handleSPicChange.bind(null, 'subtypepicon')} beforeUpload={handleSPicUpload}>
+                  {getFieldDecorator('subTypePicOn', {
+                    initialValue: item.subTypePicOn,
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(<Input size="large" placeholder="点击选择新图片" disabled />)}
+                </Upload>
+              </Col>
+            </Row>
           </FormItem>
           <FormItem label="定位图标（小）" {...formItemLayout}>
-              <Row>
-                <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px'}}>
-                  <img width="20" height="20" src={subTypeSmallPic} />
-                </Col>
-                <Col span={20}>
-                  <Upload {...propss} onChange={handleSPicChange.bind(null, 'subsmallpic')} beforeUpload={handleSPicUpload}>
-                    {getFieldDecorator('subSmallPic', {
-                      initialValue: item.subSmallPic,
-                      rules: [
-                        {
-                          required: true,
-                        },
-                      ],
-                    })(
-                    <Input size="large" placeholder="点击选择新图片" disabled />
-                    )}
-                  </Upload>
-                </Col>
-              </Row>
+            <Row>
+              <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px' }}>
+                <img width="20" height="20" src={subTypeSmallPic} />
+              </Col>
+              <Col span={20}>
+                <Upload {...propss} onChange={handleSPicChange.bind(null, 'subsmallpic')} beforeUpload={handleSPicUpload}>
+                  {getFieldDecorator('subSmallPic', {
+                    initialValue: item.subSmallPic,
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(<Input size="large" placeholder="点击选择新图片" disabled />)}
+                </Upload>
+              </Col>
+            </Row>
           </FormItem>
           <FormItem label="定位图标（大）" {...formItemLayout}>
-              <Row>
-                <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px'}}>
-                  <img width="20" height="20" src={subTypeBigPic} />
-                </Col>
-                <Col span={20}>
-                  <Upload {...propss} onChange={handleSPicChange.bind(null, 'subbigpic')} beforeUpload={handleSPicUpload}>
-                    {getFieldDecorator('subBigPic', {
-                      initialValue: item.subBigPic,
-                      rules: [
-                        {
-                          required: true,
-                        },
-                      ],
-                    })(
-                    <Input size="large" placeholder="点击选择新图片" disabled />
-                    )}
-                  </Upload>
-                </Col>
-              </Row>
+            <Row>
+              <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px' }}>
+                <img width="20" height="20" src={subTypeBigPic} />
+              </Col>
+              <Col span={20}>
+                <Upload {...propss} onChange={handleSPicChange.bind(null, 'subbigpic')} beforeUpload={handleSPicUpload}>
+                  {getFieldDecorator('subBigPic', {
+                    initialValue: item.subBigPic,
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(<Input size="large" placeholder="点击选择新图片" disabled />)}
+                </Upload>
+              </Col>
+            </Row>
           </FormItem>
         </Form>
       </Modal>
     );
   }
-
 };
 
 Modals.propTypes = {
@@ -371,6 +352,6 @@ Modals.propTypes = {
   pType: PropTypes.array,
   onOk: PropTypes.func,
   form: PropTypes.object.isRequired,
-}
+};
 
 export default Form.create()(Modals);

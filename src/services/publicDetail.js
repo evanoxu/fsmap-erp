@@ -5,10 +5,9 @@ import { Fetch, APIPath } from '../utils';
   // 2.4.1.1 加载出页面数据及搜索接口（条件的加载仅加载子类信息）
   /*
     data: {
-      currentPage Int 是 一页显示几条数据
-      pageSize  Int 是 当前第几页
-      evaluationNo  String  否 搜索的值
-      subTypeValue  int 否 子类的值，大类的值不需要传
+      currentPage Int 是 当前第几页
+      pageSize  Int 是 一页几条数据
+      key String  否 搜索值
     }
    */
   export async function publicDetailList(data) {

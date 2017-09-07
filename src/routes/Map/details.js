@@ -19,21 +19,21 @@ const Mapdetails = ({ map, dispatch, location, loading }) => {
       key: 'id',
       width: 80,
     }, {
-      title: '图片',
-      // dataIndex: 'imgList',
+      title: '标注图片',
       key: 'imgList',
       render: (text, { imgList }) => (
         <span>{imgList.map((k, i) => (<img key={i} src={k} width="100" height="100" />))}</span>
       ),
     }, {
-      title: '创建者',
+      title: '标注者',
       dataIndex: 'createName',
       key: 'createName',
       width: 100,
     }, {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      width: 140,
+      title: '标注时间',
+      dataIndex: 'createDate',
+      key: 'createDate',
+      width: 100,
     }, {
       title: '操作',
       key: 'operation',
@@ -53,17 +53,19 @@ const Mapdetails = ({ map, dispatch, location, loading }) => {
       dataIndex: 'id',
       key: 'id',
     }, {
-      title: '内容',
+      title: '标注内容',
       dataIndex: 'content',
       key: 'content',
     }, {
-      title: '创建者',
+      title: '标注者',
       dataIndex: 'createName',
       key: 'createName',
+      width: 100,
     }, {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
+      title: '标注时间',
+      dataIndex: 'createDate',
+      key: 'createDate',
+      width: 100,
     }, {
       title: '操作',
       key: 'operation',

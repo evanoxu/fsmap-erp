@@ -10,7 +10,6 @@ const TabPane = Tabs.TabPane;
 
 const PublicDetails = ({ pub, dispatch, location, loading }) => {
   const { dslist, dspagefo, dstype, dsname } = pub;
-  
   // 设置图片列表格式
   const columnp = [
     {
@@ -19,20 +18,20 @@ const PublicDetails = ({ pub, dispatch, location, loading }) => {
       key: 'id',
       width: 80,
     }, {
-      title: '图片',
-      // dataIndex: 'imgList',
+      title: '标注图片',
       key: 'imgList',
       render: (text, { imgList }) => (
         <span>{imgList.map((k, i) => (<img key={i} src={k} width="100" height="100" />))}</span>
       ),
     }, {
-      title: '创建者',
+      title: '标注者',
       dataIndex: 'createName',
       key: 'createName',
       width: 100,
     }, {
-      title: '创建时间',
+      title: '标注时间',
       dataIndex: 'createTime',
+      key: 'createTime',
       width: 140,
     }, {
       title: '操作',
@@ -53,17 +52,19 @@ const PublicDetails = ({ pub, dispatch, location, loading }) => {
       dataIndex: 'id',
       key: 'id',
     }, {
-      title: '内容',
+      title: '标注内容',
       dataIndex: 'content',
       key: 'content',
     }, {
-      title: '创建者',
+      title: '标注者',
       dataIndex: 'createName',
       key: 'createName',
+      width: 100,
     }, {
-      title: '创建时间',
+      title: '标注时间',
       dataIndex: 'createTime',
       key: 'createTime',
+      width: 140,
     }, {
       title: '操作',
       key: 'operation',
@@ -109,14 +110,14 @@ const PublicDetails = ({ pub, dispatch, location, loading }) => {
       <Tabs defaultActiveKey="1">
         <TabPane tab={typeName} key="1">
           <Table
-              pagination={dspagefo}
-              className={classnames({ [styles.table]: true })}
-              columns={column}
-              dataSource={dslist}
-              loading={loading.effects['pub/detailCommonet']}
-              rowKey={record => record.id}
-              getBodyWrapper={getBodyWrapper}
-            />
+            pagination={dspagefo}
+            className={classnames({ [styles.table]: true })}
+            columns={column}
+            dataSource={dslist}
+            loading={loading.effects['pub/detailCommonet']}
+            rowKey={record => record.id}
+            getBodyWrapper={getBodyWrapper}
+          />
         </TabPane>
       </Tabs>
     </div>
@@ -129,6 +130,5 @@ PublicDetails.PropTypes = {
   location: PropTypes.object,
   loading: PropTypes.object,
 };
-
 
 export default connect(({ pub, loading }) => ({ pub, loading }))(PublicDetails);

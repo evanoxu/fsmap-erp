@@ -93,7 +93,7 @@ const PublicManage = ({ pub, dispatch, location, loading }) => {
       title: '自动编号',
       dataIndex: 'id',
       key: 'id',
-      width: 80,
+      width: 70,
     }, {
       title: '公共服务设施名',
       dataIndex: 'name',
@@ -108,7 +108,7 @@ const PublicManage = ({ pub, dispatch, location, loading }) => {
       title: '办事指南',
       dataIndex: 'introduction',
       key: 'introduction',
-      width: 220,
+      width: 210,
     }, {
       title: '电话',
       dataIndex: 'phoneNumber',
@@ -140,7 +140,7 @@ const PublicManage = ({ pub, dispatch, location, loading }) => {
       key: 'operation',
       render: (text, { id }) => (
         <span>
-          <Button type="primary" style={{ marginRight: 4 }} onClick={handleEditClick.bind(null,id)}>编辑</Button>
+          <Button type="primary" style={{ marginRight: 4 }} onClick={handleEditClick.bind(null, id)}>编辑</Button>
           <Popconfirm title="确定删除吗?" onConfirm={handleDeleteClick.bind(null, id)}>
             <Button type="danger">删除</Button>
           </Popconfirm>

@@ -13,7 +13,7 @@ const TabPane = Tabs.TabPane;
 const EnumStatus = {
   TYPE: 1,
   SUB: 2,
-}
+};
 
 const Zhuanti = ({
   pub,
@@ -46,7 +46,7 @@ const Zhuanti = ({
   const handleAddClick = () => {
     // 设置key值、type值为add
     let zkey;
-    if (typeof(location.query.status) === 'undefined') {
+    if ( typeof(location.query.status) === 'undefined') {
       zkey = '1';
     } else {
       zkey = location.query.status;
@@ -94,8 +94,8 @@ const Zhuanti = ({
         zkey,
         id,
       },
-    })
-  }
+    });
+  };
 
   // 显示弹窗数据
   const modalProps = {
@@ -281,7 +281,7 @@ const Zhuanti = ({
   const listProps = {
     pagination: zpagefo,
     onChange(page) {
-      const { query, pathname } = location;
+      // const { query, pathname } = location;
       dispatch(routerRedux.push({
         pathname,
         query: {
@@ -291,33 +291,33 @@ const Zhuanti = ({
         },
       }));
     },
-  }
+  };
 
   return (
     <div className="content-inner">
       <Button className="content-btn" type="primary" onClick={handleAddClick}>新增</Button>
       <Tabs activeKey={query.status === String(EnumStatus.SPEED) ? String(EnumStatus.SPEED) : (query.status === String(EnumStatus.SUB) ? String(EnumStatus.SUB) : String(EnumStatus.TYPE))} onTabClick={handleTabClick}>
         <TabPane tab="公共服务分类" key={String(EnumStatus.TYPE)}>
-            <Table
-              {...listProps}
-              className={classnames({ [styles.table]: true })}
-              columns={columnsn}
-              dataSource={zlist}
-              loading={loading.effects['pub/queryzList']}
-              rowKey={record => record.id}
-              getBodyWrapper={getBodyWrapper}
-            />
+          <Table
+            {...listProps}
+            className={classnames({ [styles.table]: true })}
+            columns={columnsn}
+            dataSource={zlist}
+            loading={loading.effects['pub/queryzList']}
+            rowKey={record => record.id}
+            getBodyWrapper={getBodyWrapper}
+          />
         </TabPane>
         <TabPane tab="公共服务子类" key={String(EnumStatus.SUB)}>
-            <Table
-              {...listProps}
-              className={classnames({ [styles.table]: true })}
-              columns={columnsl}
-              dataSource={zlist}
-              loading={loading.effects['pub/queryzList']}
-              rowKey={record => record.id}
-              getBodyWrapper={getBodyWrapper}
-            />
+          <Table
+            {...listProps}
+            className={classnames({ [styles.table]: true })}
+            columns={columnsl}
+            dataSource={zlist}
+            loading={loading.effects['pub/queryzList']}
+            rowKey={record => record.id}
+            getBodyWrapper={getBodyWrapper}
+          />
         </TabPane>
       </Tabs>
       {modalVisible && <Modal {...modalProps} />}

@@ -1,6 +1,6 @@
 import { publicDataType, publicDataFind, publicDataEdit, publicDataDelete, publicDataSave } from '../services/publicManage';
 import { publicImportLogList, publicImportExcel } from '../services/publicImport';
-import { publicTypeList, publicTypeEidt, publicTypeSave, publicTypeDelete, publicTypeCheck, publicTypeAdd, publicTypeUpPic, publicSubTypeList, publicSubTypeEdit, publicSubTypeSave, publicSubTypeDelete, publicTypePage, publicSubTypeCheck, publicTypePicList, publicSubTypeAdd } from '../services/publicZt';
+import { publicTypeList, publicTypeEidt, publicTypeSave, publicTypeDelete, publicTypeAdd, publicSubTypeList, publicSubTypeEdit, publicSubTypeSave, publicSubTypeDelete, publicSubTypeAdd } from '../services/publicZt';
 import { publicDetailList, publicDetailComment, publicDetailDelete } from '../services/publicDetail';
 import pathToRegexp from 'path-to-regexp';
 import { queryURL, Storage } from '../utils';

@@ -2,14 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
-import { Upload, Button, Icon, Select, Row, Col, message, Tabs, Table, Cascader } from 'antd';
+import { Upload, Button, Icon, Row, Col, message, Tabs, Table, Cascader } from 'antd';
 import { classnames, APIPath } from '../../utils';
 import AnimTableBody from '../../components/DataTable/AnimTableBody';
 import styles from './list.less';
 import Modal from './imodal';
 
 const TabPane = Tabs.TabPane;
-const Option = Select.Option;
 
 const PublicImport = ({
   pub, 
@@ -48,15 +47,15 @@ const PublicImport = ({
       propsList = {
         ...propsList,
         excelUrl: data,
-      }
+      };
     }
-  }
+  };
   const handleRemove = () => {
     propsList = {
       ...propsList,
       excelUrl: '',
-    }
-  }
+    };
+  };
   const handleUpload = (file) => {
     const isType = file.name.split('.');
     if (isType[isType.length-1] != 'xls') {
@@ -65,32 +64,30 @@ const PublicImport = ({
     } else {
       return true;
     }
-  }
+  };
   // 设置公共服务类型
   const handleSChange = (value) => {
     propsList = {
       ...propsList,
-      serverId:value,
-    }
-  }
+      serverId: value,
+    };
+  };
   // 设置导入数据
   const handleClick = () => {
     if (Object.keys(propsList).length < 2) {
       message.error('请先填写相关数据');
     } else {
-      // onImp(propsList);
-      console.log(propsList);
       dispatch({
         type: 'pub/importExcel',
         payload: propsList,
       });
     }
-  }
+  };
   const propss = {
     action: APIPath.PUBLICIMPORTUPEXCEL,
     onChange: handleChange,
     beforeUpload: handleUpload,
-  }
+  };
 
   /* list */
   // 批量基础数据
@@ -107,7 +104,7 @@ const PublicImport = ({
         },
       }));
     },
-  }
+  };
   // 批量基础数据参数
   const columns = [
     {
@@ -126,7 +123,7 @@ const PublicImport = ({
       title: '已处理条数',
       dataIndex: 'successNum',
       key: 'successNum',
-    },{
+    }, {
       title: '失败条数',
       dataIndex: 'faildNum',
       key: 'faildNum',
@@ -145,7 +142,7 @@ const PublicImport = ({
         <span>
           { record.state < 2 ? (record.state < 1 ? '已导入' : '处理中') : '已处理完成'}
         </span>
-      )
+      ),
     },
   ];
   // 设置页面数据
@@ -174,7 +171,7 @@ const PublicImport = ({
     <div className="content-inner">
       <Tabs defaultActiveKey="1">
         <TabPane tab="导入基础公共服务数据" key="1">
-          <Row style={{paddingBottom: 20}}>
+          <Row style={{ paddingBottom: 20 }}>
             <Col span={7}>
               公共服务类别：
               <Cascader 

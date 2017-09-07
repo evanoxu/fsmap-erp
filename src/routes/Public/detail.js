@@ -81,7 +81,6 @@ const PublicDetail = ({ pub, dispatch, location, loading }) => {
       key: 'address',
     }, {
       title: '公共服务分类',
-      // dataIndex: 'publicServiceType',
       key: 'publicServiceType',
       width: 100,
       render: (text, { publicServiceType }) => (
@@ -89,21 +88,20 @@ const PublicDetail = ({ pub, dispatch, location, loading }) => {
       ),
     }, {
       title: '子类',
-      // dataIndex: 'publicServiceSubType',
       key: 'publicServiceSubType',
       width: 100,
       render: (text, { publicServiceType, publicServiceSubType }) => (
         <span>{pSubTypeFunc(publicServiceType, publicServiceSubType)}</span>
       ),
     }, {
-      title: '更新者',
-      dataIndex: 'lastUpdateName',
-      key: 'lastUpdateName',
+      title: '标注者',
+      dataIndex: 'createName',
+      key: 'createName',
       width: 100,
     }, {
-      title: '更新时间',
-      dataIndex: 'lastUpdateDate',
-      key: 'lastUpdateDate',
+      title: '标注时间',
+      dataIndex: 'createDate',
+      key: 'createDate',
       width: 100,
     }, {
       title: '操作',
@@ -164,15 +162,15 @@ const PublicDetail = ({ pub, dispatch, location, loading }) => {
         <TabPane tab="用户发布内容管理" key="1">
           <Filter {...filterProps} />
           <Table
-              {...listProps}
-              pagination={dpagefo}
-              className={classnames({ [styles.table]: true })}
-              columns={columns}
-              dataSource={dlist}
-              loading={loading.effects['pub/querydList']}
-              rowKey={record => record.id}
-              getBodyWrapper={getBodyWrapper}
-            />
+            {...listProps}
+            pagination={dpagefo}
+            className={classnames({ [styles.table]: true })}
+            columns={columns}
+            dataSource={dlist}
+            loading={loading.effects['pub/querydList']}
+            rowKey={record => record.id}
+            getBodyWrapper={getBodyWrapper}
+          />
         </TabPane>
       </Tabs>
     </div>
@@ -185,6 +183,5 @@ PublicDetail.PropTypes = {
   location: PropTypes.object,
   loading: PropTypes.object,
 };
-
 
 export default connect(({ pub, loading }) => ({ pub, loading }))(PublicDetail);
