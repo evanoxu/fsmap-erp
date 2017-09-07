@@ -629,26 +629,40 @@ export default {
         throw data.statusMsg;
       }
     },
-    * dataPlateCDelete({payload}, { call, put }) {     
-      yield put({
-        type: 'updateState',
-        payload: {
-          isSava:false,
-          isDelete:false,
-        },
-      });       
-      const data = yield call(mapPlate.dataPlateCDelete,payload);
-      if (data.statusCode === 200) {
+    * dataPlateCDelete({payload}, { call, put }) { 
+      var status = queryURL('status')      
+      if(status=='add'){    
         yield put({
           type: 'updateState',
           payload: {
-            isDelete: true,
+            isSava:false,
+            isDelete:false,
           },
-        });
+        });         
+      }
+      const data = yield call(mapPlate.dataPlateCDelete,payload);
+      if (data.statusCode === 200) {
+        if(status=='list'){
+          yield put({
+            type: 'queryPList',
+            payload: {
+              currentPage: queryURL('page')||1,
+              pageSize: queryURL('pageSize')||10,
+              key: queryURL('keys')||'',
+            },
+          });          
+        }else{
+          yield put({
+            type: 'updateState',
+            payload: {
+              isDelete: true,
+            },
+          });
+        }
       } else {
         throw data.statusMsg;
       }
-    },    
+    },     
 
   },
 

@@ -266,8 +266,13 @@ class PlateLoad extends React.Component {
             content,polygon
           }
           polygon.sid = Polygonid
+          if(editId==Polygonid){
+            polygon.enableEditing()
+            var center = polygon.getBounds().getCenter()
+            var point = new BMap.Point(center.lng, center.lat);             
+            map.setCenter(point)
+          }
           this.addHandler(content,polygon);
-          // if(i==4) break;
       }  
       this.setState({
         json,
