@@ -3,6 +3,7 @@ import { dataList, dataEdit, dataDelete, dataSave, dataNetList } from '../servic
 import { dataNetAdd, dataImportList, dataImportExcel } from '../services/mapImport';
 import { dataTypeList, dataTypeAdd, dataTypeDelete, dataTypeEdit, dataTypeSave, dataSubList, dataSubAdd, dataSubDelete, dataSubEdit, dataSubSave, dataSpeedList, dataSpeedAdd, dataSpeedDelete, dataSpeedEdit, dataSpeedSave } from '../services/mapZt';
 import { dataDetailList, dataDetailCommonet, dataDetailDelete } from '../services/mapDetail';
+import pathToRegexp from 'path-to-regexp';
 import { queryURL, Storage, Config } from '../utils';
 import { routerRedux } from 'dva/router';
 import * as mapPlate from '../services/mapPlate';
@@ -33,6 +34,11 @@ export default {
     dpagefo: { current: 1, pageSize: 10, key: '', total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
     dtype: 0,
     dcurItem: {},
+    // 详情内容数据
+    dstype: '0',
+    dsname: '',
+    dslist: [],
+    dspagefo: { current: 1, pageSize: 10, key: '', total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
     // 板块数据
     plist: [],
     ppageInfo: { current: 1, pageSize: 10, areaId: -1, key: '', total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },   
@@ -49,6 +55,7 @@ export default {
           type: 'queryNetList',
         });
         const path = location.pathname;
+        const match = pathToRegexp('/map/detail/:type/:id').exec(location.pathname);
         switch (path){
           case '/map/manage':
             var pays = location.query, pages, pagesizes, areaids, keyas;
@@ -140,11 +147,54 @@ export default {
             }          
             break;                                        
         }
+        if (match) {
+          // 查看类型 0 = 图片，1 = 点评
+          const type = match[1];
+          // 查看id
+          const id = match[2];
+          // 查看类
+          const mapType = 'map';
+          let pays = location.query, pages, pagesizes;
+          pages = pays.page ? Number(pays.page) : 1;
+          pagesizes = pays.pageSize ? Number(pays.pageSize) : 10;
+          // 查询相关信息
+          dispatch({
+            type: 'detailCommonet',
+            payload: {
+              type,
+              id,
+              mapType,
+              currentPage: pages,
+              pageSize: pagesizes,
+            },
+          });
+        }
       });
     },
   },
 
   effects: {
+    /* manage */
+    // 查询网络类型数据
+    * queryNetList({}, { call, put }) {
+      const data = yield call(dataNetList);
+      if (data.statusCode === 200) {
+        let itype = [];
+        for (let i in data) {
+          if (!isNaN(Number(i))) {
+            itype.push(data[i]);
+          }
+        }
+        yield put({
+          type: 'updateState',
+          payload: {
+            itype,
+          },
+        });
+      } else {
+        throw data.statusMsg;
+      }
+    },
     // 查询地图基础数据
     * queryList({ payload }, { call, put }) {
       const data = yield call(dataList, payload);
@@ -243,28 +293,6 @@ export default {
         throw data.statusMsg;
       }
     },
-
-    // 查询网络类型数据
-    * queryNetList({}, { call, put }) {
-      const data = yield call(dataNetList);
-      if (data.statusCode === 200) {
-        let itype = [];
-        for (let i in data) {
-          if (!isNaN(Number(i))) {
-            itype.push(data[i]);
-          }
-        }
-        yield put({
-          type: 'updateState',
-          payload: {
-            itype,
-          },
-        });
-      } else {
-        throw data.statusMsg;
-      }
-    },
-
     // 新增单条地图详细数据
     * addData({ payload }, { call, put }) {
       yield put({ type: 'showModal' });
@@ -281,6 +309,7 @@ export default {
         throw data.statusMsg;
       }
     },
+    /* import */
     // 查询地图基础数据
     * queryiList({ payload }, { call, put }) {
       const data = yield call(dataImportList, payload);
@@ -321,7 +350,7 @@ export default {
         throw data.statusMsg;
       }
     },
-
+    /* zt */
     // 查询专题数据
     * queryzList({ payload }, { call, put }) {
       // console.log(payload);
@@ -478,7 +507,7 @@ export default {
         throw data.statusMsg;
       }
     },
-
+    /* detail */
     // 查询详情数据
     * querydList({ payload }, { call, put }) {
       const data = yield call(dataDetailList, payload);
@@ -487,8 +516,8 @@ export default {
         yield put({
           type: 'updateState',
           payload: {
-            dlist:list,
-            dpageInfo: {
+            dlist: list,
+            dpagefo: {
               current: payload.currentPage,
               pageSize: payload.pageSize,
               key: payload.key,
@@ -502,23 +531,42 @@ export default {
     },
     // 查看图片或点评数据
     * detailCommonet({ payload }, { call, put }) {
-      const { type } = payload;
-      console.log(payload)
       const data = yield call(dataDetailCommonet, payload);
-      if (data.statusCode === 200 && typeof(data.list) != 'undefined') {
-        const { list, pageInfo } = data;
-        const dcurItem = { list, pageInfo };
+      if (data.statusCode === 200) {
+        const { list, pageInfo, refName } = data;
+        const dslist = list;
+        const dsname = refName;
         yield put({
           type: 'showModal',
           payload: {
-            dcurItem,
-            dtype: type,
+            dslist,
+            dstype: payload.type,
+            dsname,
+            dspagefo: {
+              current: payload.currentPage,
+              pageSize: payload.pageSize,
+              type: payload.type,
+              id: payload.id,
+              mapType: payload.mapType,
+              total: pageInfo.totalRecords,
+            },
           },
         });
       } else {
         throw data.statusMsg;
       }
     },
+    // 删除图片或点评数据
+    * detailDelete({ payload }, { call, put }) {
+      const { type, ids } = payload;
+      const data = yield call(dataDetailDelete, payload);
+      if (data.statusCode === 200) {
+        yield put(routerRedux.push('/map/detail/' + type + '/' + ids));
+      } else {
+        throw data.statusMsg;
+      }
+    },
+    /* plate */
     * queryPList({ payload }, { call, put }) {
       const data = yield call(mapPlate.dataPlateList, payload);
       if (data.statusCode === 200) {
@@ -539,7 +587,7 @@ export default {
       } else {
         throw data.statusMsg;
       }
-    },   
+    },
     * plateLoad({ }, { call, put }) {
       yield put({
         type: 'updateState',

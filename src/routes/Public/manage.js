@@ -93,40 +93,50 @@ const PublicManage = ({ pub, dispatch, location, loading }) => {
       title: '自动编号',
       dataIndex: 'id',
       key: 'id',
+      width: 80,
     }, {
       title: '公共服务设施名',
       dataIndex: 'name',
       key: 'name',
+      width: 100,
     }, {
       title: '地址',
       dataIndex: 'address',
       key: 'address',
+      width: 100,
     }, {
       title: '办事指南',
       dataIndex: 'introduction',
       key: 'introduction',
+      width: 220,
     }, {
       title: '电话',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
+      width: 100,
     }, {
       title: '办公时间',
       dataIndex: 'officeTime',
       key: 'officeTime',
+      width: 100,
     }, {
       title: '直达链接',
       dataIndex: 'linkUrl',
       key: 'linkUrl',
+      width: 100,
     }, {
       title: '最后更新者',
       dataIndex: 'lastUpdateName',
       key: 'lastUpdateName',
+      width: 100,
     }, {
       title: '最后更新时间',
       dataIndex: 'lastUpdateDate',
       key: 'lastUpdateDate',
+      width: 100,
     }, {
       title: '操作',
+      width: 140,
       key: 'operation',
       render: (text, { id }) => (
         <span>

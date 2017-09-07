@@ -1,23 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { routerRedux } from 'dva/router';
+import { routerRedux, Link } from 'dva/router';
 import { connect } from 'dva';
-import { Tabs, Table, Button, Popconfirm } from 'antd';
+import { Tabs, Table } from 'antd';
 import { classnames } from '../../utils';
 import AnimTableBody from '../../components/DataTable/AnimTableBody';
 import styles from './list.less';
 import Filter from './filter';
-import Modal from './dmodal';
-
 
 const TabPane = Tabs.TabPane;
 
 const PublicDetail = ({ pub, dispatch, location, loading }) => {
-  const { dlist, dpagefo, dtype, dcurItem, ntype, modalVisible } = pub;
+  const { dlist, dpagefo, ntype } = pub;
 
   // 设置大小类
-  const pType = ntype.map(function (t, i) {
-    let das = t.typeList.map(function(tt, i) {
+  const pType = ntype.map(function (t) {
+    let das = t.typeList.map(function (tt) {
       const { subTypeName, subTypeValue, id } = tt;
       const datas = {
         'label': subTypeName,
@@ -32,53 +30,38 @@ const PublicDetail = ({ pub, dispatch, location, loading }) => {
       'children': das,
     };
   });
-
+  // 显示公共服务分类
   const pTypeFunc = (id) => {
     if (id) {
       const ad = pType.filter(function (v, i) {
         return v.value == id;
       });
-      return ad[0].label;
+      if (ad.length > 0) {
+        return ad[0].label;
+      }
     } else {
       return '无';
     }
   };
+  // 显示公共服务子类
   const pSubTypeFunc = (id, ids) => {
     if (id) {
       const ad = pType.filter(function (v, i) {
         return v.value == id;
       });
-      if (ids) {
+      if (ad.length > 0 && ids) {
         const ads = ad[0].children.filter(function (v, i) {
           return v.value == ids;
         });
-        return ads[0].label;
+        if (ads.length > 0) {
+          return ads[0].label;
+        }
       } else {
         return '无';
       }
     } else {
       return '无';
     }
-  };
-  
-  // 显示弹窗数据
-  const modalProps = {
-    item: dcurItem,
-    dtype,
-    visible: modalVisible,
-    confirmLoading: loading.effects['pub/detailCommonet'],
-    title: `${dtype === 0 ? '查看图片' : '查看点评'}`,
-    wrapClassName: 'vertical-center-modal',
-    onOk() {
-      dispatch({
-        type: 'pub/hideModal',
-      });
-    },
-    onCancel() {
-      dispatch({
-        type: 'pub/hideModal',
-      });
-    },
   };
 
   // 设置列表格式
@@ -87,6 +70,7 @@ const PublicDetail = ({ pub, dispatch, location, loading }) => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      width: 80,
     }, {
       title: '公共服务设施名',
       dataIndex: 'name',
@@ -99,13 +83,15 @@ const PublicDetail = ({ pub, dispatch, location, loading }) => {
       title: '公共服务分类',
       // dataIndex: 'publicServiceType',
       key: 'publicServiceType',
-      render: (text, {publicServiceType}) => (
+      width: 100,
+      render: (text, { publicServiceType }) => (
         <span>{pTypeFunc(publicServiceType)}</span>
       ),
     }, {
       title: '子类',
       // dataIndex: 'publicServiceSubType',
       key: 'publicServiceSubType',
+      width: 100,
       render: (text, { publicServiceType, publicServiceSubType }) => (
         <span>{pSubTypeFunc(publicServiceType, publicServiceSubType)}</span>
       ),
@@ -113,52 +99,21 @@ const PublicDetail = ({ pub, dispatch, location, loading }) => {
       title: '更新者',
       dataIndex: 'lastUpdateName',
       key: 'lastUpdateName',
+      width: 100,
     }, {
       title: '更新时间',
       dataIndex: 'lastUpdateDate',
       key: 'lastUpdateDate',
+      width: 100,
     }, {
       title: '操作',
       key: 'operation',
-      render: (text, { id }) => (
-        <span>
-          <Button type="primary" style={{ marginRight: 4 }} onClick={handlePhotoClick.bind(null,id)}>查看图片</Button>
-          <Button type="primary" onClick={handleCommentClick.bind(null,id)}>查看点评</Button>
-        </span>
+      width: 140,
+      render: (text, { id, showPicAndContent }) => (
+        showPicAndContent === 3 ? <span><Link style={{ marginRight: 4 }} to={`/public/detail/0/${id}`}>查看图片</Link><Link to={`/public/detail/1/${id}`}>查看点评</Link></span> : (showPicAndContent === 2 ? <Link to={`/public/detail/1/${id}`}>查看点评</Link> : <Link to={`/public/detail/0/${id}`}>查看图片</Link>)
       ),
     },
   ];
-
-  // 获取图片信息
-  const handlePhotoClick = (id) => {
-    const data = {
-      type: 0,
-      pageSize: 10,
-      currentPage: 1,
-      mapType: 'publicService',
-      id,
-    };
-    dispatch({
-      type: 'pub/detailCommonet',
-      payload: data,
-    });
-  };
-
-  // 获取点评信息
-  const handleCommentClick = (id) => {
-    const data = {
-      type: 1,
-      pageSize: 10,
-      currentPage: 1,
-      mapType: 'publicService',
-      id,
-    };
-    dispatch({
-      type: 'pub/detailCommonet',
-      payload: data,
-    });
-  };
-  
   // 设置页面数据
   const getBodyWrapperProps = {
     page: location.query.page,
@@ -166,6 +121,19 @@ const PublicDetail = ({ pub, dispatch, location, loading }) => {
   };
   const getBodyWrapper = (body) => {
     return <AnimTableBody {...getBodyWrapperProps} body={body} />;
+  };
+  const listProps = {
+    onChange(page) {
+      const { query, pathname } = location;
+      dispatch(routerRedux.push({
+        pathname,
+        query: {
+          ...query,
+          page: page.current,
+          pageSize: page.pageSize,
+        },
+      }));
+    },
   };
 
   const details = true;
@@ -189,20 +157,22 @@ const PublicDetail = ({ pub, dispatch, location, loading }) => {
       }));
     },
   };
+
   return (
     <div className="content-inner">
       <Tabs defaultActiveKey="1">
         <TabPane tab="用户发布内容管理" key="1">
           <Filter {...filterProps} />
           <Table
+              {...listProps}
               pagination={dpagefo}
               className={classnames({ [styles.table]: true })}
               columns={columns}
               dataSource={dlist}
+              loading={loading.effects['pub/querydList']}
               rowKey={record => record.id}
               getBodyWrapper={getBodyWrapper}
             />
-            {modalVisible && <Modal {...modalProps} />}
         </TabPane>
       </Tabs>
     </div>

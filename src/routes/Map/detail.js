@@ -1,40 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { routerRedux } from 'dva/router';
+import { routerRedux, Link } from 'dva/router';
 import { connect } from 'dva';
-import { Tabs, Table, Button, Popconfirm } from 'antd';
+import { Tabs, Table } from 'antd';
 import { classnames } from '../../utils';
 import AnimTableBody from '../../components/DataTable/AnimTableBody';
 import styles from './list.less';
 import Filter from './filter';
-import Modal from './dmodal';
-
 
 const TabPane = Tabs.TabPane;
 
 const Mapdetail = ({ map, dispatch, location, loading }) => {
-  const { dlist, dpagefo, dtype, dcurItem, modalVisible } = map;
-  // 列表数据
-  
-  // 显示弹窗数据
-  const modalProps = {
-    item: dcurItem,
-    dtype,
-    visible: modalVisible,
-    confirmLoading: loading.effects['map/detailCommonet'],
-    title: `${dtype === 0 ? '查看图片' : '查看点评'}`,
-    wrapClassName: 'vertical-center-modal',
-    onOk() {
-      dispatch({
-        type: 'map/hideModal',
-      });
-    },
-    onCancel() {
-      dispatch({
-        type: 'map/hideModal',
-      });
-    },
-  };
+  const { dlist, dpagefo } = map;
 
   // 设置列表格式
   const columns = [
@@ -57,45 +34,12 @@ const Mapdetail = ({ map, dispatch, location, loading }) => {
     }, {
       title: '操作',
       key: 'operation',
-      render: (text, { id }) => (
-        <span>
-          <Button type="primary" style={{ marginRight: 4 }} onClick={handlePhotoClick.bind(null,id)}>查看图片</Button>
-          <Button type="primary" onClick={handleCommentClick.bind(null,id)}>查看点评</Button>
-        </span>
+      width: 140,
+      render: (text, { id, showPicAndContent }) => (
+        showPicAndContent === 3 ? <span><Link style={{ marginRight: 4 }} to={`/map/detail/0/${id}`}>查看图片</Link><Link to={`/map/detail/1/${id}`}>查看点评</Link></span> : (showPicAndContent === 2 ? <Link to={`/map/detail/1/${id}`}>查看点评</Link> : <Link to={`/map/detail/0/${id}`}>查看图片</Link>)
       ),
     },
   ];
-
-  // 获取图片信息
-  const handlePhotoClick = (id) => {
-    const data = {
-      type: 0,
-      pageSize: 10,
-      currentPage: 1,
-      mapType: 'map',
-      id,
-    };
-    dispatch({
-      type: 'map/detailCommonet',
-      payload: data,
-    });
-  };
-
-  // 获取点评信息
-  const handleCommentClick = (id) => {
-    const data = {
-      type: 1,
-      pageSize: 10,
-      currentPage: 1,
-      mapType: 'map',
-      id,
-    };
-    dispatch({
-      type: 'map/detailCommonet',
-      payload: data,
-    });
-  };
-  
   // 设置页面数据
   const getBodyWrapperProps = {
     page: location.query.page,
@@ -103,6 +47,19 @@ const Mapdetail = ({ map, dispatch, location, loading }) => {
   };
   const getBodyWrapper = (body) => {
     return <AnimTableBody {...getBodyWrapperProps} body={body} />;
+  };
+  const listProps = {
+    onChange(page) {
+      const { query, pathname } = location;
+      dispatch(routerRedux.push({
+        pathname,
+        query: {
+          ...query,
+          page: page.current,
+          pageSize: page.pageSize,
+        },
+      }));
+    },
   };
 
   // 查询数据
@@ -125,20 +82,22 @@ const Mapdetail = ({ map, dispatch, location, loading }) => {
       }));
     },
   };
+
   return (
     <div className="content-inner">
       <Tabs defaultActiveKey="1">
         <TabPane tab="用户发布内容管理" key="1">
           <Filter {...filterProps} />
           <Table
+              {...listProps}
               pagination={dpagefo}
               className={classnames({ [styles.table]: true })}
               columns={columns}
               dataSource={dlist}
+              loading={loading.effects['pub/querydList']}
               rowKey={record => record.id}
               getBodyWrapper={getBodyWrapper}
             />
-            {modalVisible && <Modal {...modalProps} />}
         </TabPane>
       </Tabs>
     </div>

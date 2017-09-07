@@ -89,7 +89,7 @@ const Filter = ({
       }
 
       <Col {...ColProps} xl={{ span: 4 }} md={{ span: 6 }}>
-        {getFieldDecorator('keys', { initialValue: keys })(<Input placeholder="请输入你要查询的地址" size="large" />)}
+        {getFieldDecorator('keys', { initialValue: keys })(<Input placeholder="输入要查询的名称关键词" size="large" />)}
       </Col>
       <Col {...TwoColProps} xl={{ span: 4 }} md={{ span: 8 }} sm={{ span: 8 }}>
         <Button type="primary" size="large" style={{marginRight: 16}} onClick={handleSubmit}>查询</Button>

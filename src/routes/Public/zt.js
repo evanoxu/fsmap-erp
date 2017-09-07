@@ -303,6 +303,7 @@ const Zhuanti = ({
               className={classnames({ [styles.table]: true })}
               columns={columnsn}
               dataSource={zlist}
+              loading={loading.effects['pub/queryzList']}
               rowKey={record => record.id}
               getBodyWrapper={getBodyWrapper}
             />
@@ -313,6 +314,7 @@ const Zhuanti = ({
               className={classnames({ [styles.table]: true })}
               columns={columnsl}
               dataSource={zlist}
+              loading={loading.effects['pub/queryzList']}
               rowKey={record => record.id}
               getBodyWrapper={getBodyWrapper}
             />

@@ -2,7 +2,7 @@ import { publicDataType, publicDataFind, publicDataEdit, publicDataDelete, publi
 import { publicImportLogList, publicImportExcel } from '../services/publicImport';
 import { publicTypeList, publicTypeEidt, publicTypeSave, publicTypeDelete, publicTypeCheck, publicTypeAdd, publicTypeUpPic, publicSubTypeList, publicSubTypeEdit, publicSubTypeSave, publicSubTypeDelete, publicTypePage, publicSubTypeCheck, publicTypePicList, publicSubTypeAdd } from '../services/publicZt';
 import { publicDetailList, publicDetailComment, publicDetailDelete } from '../services/publicDetail';
-
+import pathToRegexp from 'path-to-regexp';
 import { queryURL, Storage } from '../utils';
 import { routerRedux } from 'dva/router';
 
@@ -27,8 +27,13 @@ export default {
     // 详情数据
     dlist: [],
     dpagefo: { current: 1, pageSize: 10, key: '', total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
-    dtype: 0,
     dcurItem: {},
+    // 详情内容数据
+    dstype: '0',
+    dsname: '',
+    dslist: [],
+    dspagefo: { current: 1, pageSize: 10, key: '', total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
+
   },
 
   subscriptions: {
@@ -38,6 +43,7 @@ export default {
         dispatch({
           type: 'queryPublicType',
         });
+        const match = pathToRegexp('/public/detail/:type/:id').exec(location.pathname);
         if (location.pathname === '/public/manage') {
           // 设置初始参数
           let pays = location.query, pages, pagesizes, areas, subareas, keyas;
@@ -80,24 +86,43 @@ export default {
               status: statuss,
               currentPage: pages,
               pageSize: pagesizes,
-            }
-          })
+            },
+          });
         } else if (location.pathname === '/public/detail') {
           // 设置初始参数
-          let pays = location.query, pages, pagesizes, areaids, keyas;
+          let pays = location.query, pages, pagesizes, keyas;
           pages = pays.page ? Number(pays.page) : 1;
           pagesizes = pays.pageSize ? Number(pays.pageSize) : 10;
-          areaids = pays.area ? Number(pays.area) : 1;
           keyas = pays.keys ? String(pays.keys) : '';
           dispatch({
             type: 'querydList',
             payload: {
               currentPage: pages,
               pageSize: pagesizes,
-              evaluationNo: keyas,
-              subTypeValue: areaids,
-            }
-          })
+              key: keyas,
+            },
+          });
+        } else if (match) {
+          // 查看类型 0 = 图片，1 = 点评
+          const type = match[1];
+          // 查看id
+          const id = match[2];
+          // 查看类
+          const mapType = 'publicService';
+          let pays = location.query, pages, pagesizes;
+          pages = pays.page ? Number(pays.page) : 1;
+          pagesizes = pays.pageSize ? Number(pays.pageSize) : 10;
+          // 查询相关信息
+          dispatch({
+            type: 'detailCommonet',
+            payload: {
+              type,
+              id,
+              mapType,
+              currentPage: pages,
+              pageSize: pagesizes,
+            },
+          });
         }
       });
     },
@@ -423,15 +448,9 @@ export default {
     // 查询详情数据
     * querydList({ payload }, { call, put }) {
       const data = yield call(publicDetailList, payload);
-      // console.log('1',data);
-      if (data.statusCode === 0) {
-        const { pageInfo } = data;
-        let dlist = [];
-        for (let i in data) {
-          if (!isNaN(Number(i))) {
-            dlist.push(data[i]);
-          }
-        }
+      if (data.statusCode === 200) {
+        const { list, pageInfo } = data;
+        const dlist = list;
         yield put({
           type: 'updateState',
           payload: {
@@ -439,9 +458,8 @@ export default {
             dpagefo: {
               current: payload.currentPage,
               pageSize: payload.pageSize,
-              evaluationNo: payload.evaluationNo,
-              subTypeValue: payload.subTypeValue,
-              total: 3,
+              key: payload.key,
+              total: pageInfo.totalRecords,
             },
           },
         });
@@ -451,18 +469,37 @@ export default {
     },
     // 查看图片或点评数据
     * detailCommonet({ payload }, { call, put }) {
-      const { type } = payload;
       const data = yield call(publicDetailComment, payload);
-      if (data.statusCode === 200 && typeof(data.list) != 'undefined') {
-        const { list, pageInfo } = data;
-        const dcurItem = { list, pageInfo };
+      if (data.statusCode === 200) {
+        const { list, pageInfo, refName } = data;
+        const dslist = list;
+        const dsname = refName;
         yield put({
-          type: 'showModal',
+          type: 'updateState',
           payload: {
-            dcurItem,
-            dtype: type,
+            dslist,
+            dstype: payload.type,
+            dsname,
+            dspagefo: {
+              current: payload.currentPage,
+              pageSize: payload.pageSize,
+              type: payload.type,
+              id: payload.id,
+              mapType: payload.mapType,
+              total: pageInfo.totalRecords,
+            },
           },
         });
+      } else {
+        throw data.statusMsg;
+      }
+    },
+    // 删除图片或点评数据
+    * detailDelete({ payload }, { call, put }) {
+      const { type, ids } = payload;
+      const data = yield call(publicDetailDelete, payload);
+      if (data.statusCode === 200) {
+        yield put(routerRedux.push('/public/detail/' + type + '/' + ids));
       } else {
         throw data.statusMsg;
       }

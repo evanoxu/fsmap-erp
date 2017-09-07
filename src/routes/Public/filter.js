@@ -31,9 +31,7 @@ const Filter = ({
 }) => {
   const handleSubmit = () => {
     let fields = getFieldsValue();
-    if (details) {
-      fields['area'] = fields['area'][1];
-    } else {
+    if (!details) {
       fields['subArea'] = fields['area'][1];
       fields['area'] = fields['area'][0];
     }
@@ -68,6 +66,7 @@ const Filter = ({
 
   return (
     <Row gutter={24}>
+      { !details &&
       <Col {...ColProps} md={{ span: 6 }}>
         {getFieldDecorator('area', { initialValue: areas })(<Cascader 
           size="large" 
@@ -76,8 +75,9 @@ const Filter = ({
           placeholder="选择公共服务类别" 
         />)}
       </Col>
+      }
       <Col {...ColProps} md={{ span: 6 }}>
-        {getFieldDecorator('keys', { initialValue: keys })(<Search placeholder="输入要查询的关键词" size="large" />)}
+        {getFieldDecorator('keys', { initialValue: keys })(<Search placeholder="输入要查询的设施名关键词" size="large" />)}
       </Col>
       <Col {...TwoColProps} md={{ span: 8 }}>
         <Button type="primary" size="large" style={{ marginRight: 16 }} onClick={handleSubmit}>查询</Button>

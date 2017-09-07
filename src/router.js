@@ -69,6 +69,15 @@ const Routers = ({ history, app }) => {
           },
         },
         {
+          path: 'map/detail/:type/:id',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/map'));
+              cb(null, require('./routes/Map/details'));
+            }, 'mapdetails');
+          },
+        },
+        {
           path: 'map/plate',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
@@ -111,6 +120,15 @@ const Routers = ({ history, app }) => {
               registerModel(app, require('./models/public'));
               cb(null, require('./routes/Public/detail'));
             }, 'publicdetail');
+          },
+        },
+        {
+          path: 'public/detail/:type/:id',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/public'));
+              cb(null, require('./routes/Public/details'));
+            }, 'publicdetails');
           },
         },
       ],
