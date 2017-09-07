@@ -132,6 +132,51 @@ const Routers = ({ history, app }) => {
           },
         },
         {
+          path: 'industry/manage',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/industry'));
+              cb(null, require('./routes/Industry/manage'));
+            }, 'industrymanage');
+          },
+        },
+        {
+          path: 'industry/import',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/industry'));
+              cb(null, require('./routes/Industry/import'));
+            }, 'industryimport');
+          },
+        },
+        {
+          path: 'industry/zt',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/industry'));
+              cb(null, require('./routes/Industry/zt'));
+            }, 'industryzt');
+          },
+        },
+        {
+          path: 'industry/detail',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/industry'));
+              cb(null, require('./routes/Industry/detail'));
+            }, 'industrydetail');
+          },
+        },
+        {
+          path: 'industry/detail/:type/:id',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/industry'));
+              cb(null, require('./routes/Industry/details'));
+            }, 'industrydetails');
+          },
+        },
+        {
           path: 'evaluate/map/',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
@@ -139,7 +184,7 @@ const Routers = ({ history, app }) => {
               cb(null, require('./routes/evaluate/map'));
             }, 'evaluatemap');
           },
-        },        
+        },
         {
           path: 'evaluate/public/',
           getComponent(nextState, cb) {
@@ -166,7 +211,7 @@ const Routers = ({ history, app }) => {
               cb(null, require('./routes/evaluate/problem'));
             }, 'evaluateproblem');
           },
-        },                        
+        },
       ],
     },
   ];

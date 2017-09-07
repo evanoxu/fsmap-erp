@@ -1,0 +1,216 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { routerRedux } from 'dva/router';
+import { connect } from 'dva';
+import { Upload, Button, Icon, Select, Row, Col, message, Tabs, Table } from 'antd';
+import { classnames, APIPath } from '../../utils';
+import AnimTableBody from '../../components/DataTable/AnimTableBody';
+import styles from './list.less';
+import Modal from './imodal';
+
+const TabPane = Tabs.TabPane;
+const Option = Select.Option;
+
+const IndustryImport = ({
+  industry, 
+  dispatch, 
+  location, 
+  loading, 
+}) => {
+  const { list, pageInfo, ntype, modalVisible } = industry;
+
+  /* add */
+  // 设置默认上传资料
+  let propsList = {};
+  // 设置上传回调数据
+  const handleChange = (info) => {
+    let filesList = info.file;
+    if (filesList.status == 'done') {
+      const { data } = filesList.response;
+      propsList = {
+        ...propsList,
+        excelUrl: data,
+      };
+    }
+  };
+  const handleRemove = () => {
+    propsList = {
+      ...propsList,
+      excelUrl: '',
+    };
+  };
+  const handleUpload = (file) => {
+    const isType = file.name.split('.');
+    if (isType[isType.length-1] != 'xls') {
+      message.error('上传文件格式有误，请重新选择');
+      return false;
+    } else {
+      return true;
+    }
+  };
+  // 设置产业类型
+  const handleSChange = (value) => {
+    const ads = IndustryFet(value);
+    propsList = {
+      ...propsList,
+      serverId: ads,
+    };
+  };
+  // 设置导入数据
+  const handleClick = () => {
+    if (Object.keys(propsList).length < 2) {
+      message.error('请先填写相关数据');
+    } else {
+      dispatch({
+        type: 'industry/importExcel',
+        payload: propsList,
+      });
+    }
+  };
+  const propss = {
+    action: APIPath.INDUSTRYIMPORTUPEXCEL,
+    onChange: handleChange,
+    beforeUpload: handleUpload,
+  };
+  // 设置产业类型
+  const selectOption = ntype.map(sels => <Option key={sels.typeName}>{sels.typeName}</Option>);
+  // 查询产业类型值
+  const IndustryFet = (name) => {
+    if (name) {
+      const ad = ntype.filter((v) => {
+        return v.typeName === name;
+      });
+      if (ad.length > 0) {
+        return ad[0].typeValue;
+      } else {
+        return -1;
+      }
+    } else {
+      return -1;
+    }
+  };
+
+  /* list */
+  // 批量基础数据
+  const listProps = {
+    pagination: pageInfo,
+    onChange(page) {
+      const { query, pathname } = location;
+      dispatch(routerRedux.push({
+        pathname,
+        query: {
+          ...query,
+          page: page.current,
+          pageSize: page.pageSize,
+        },
+      }));
+    },
+  };
+  // 批量基础数据参数
+  const columns = [
+    {
+      title: '标识',
+      dataIndex: 'id',
+      key: 'id',
+    }, {
+      title: '用户名',
+      dataIndex: 'createName',
+      key: 'createName',
+    }, {
+      title: '总条数',
+      dataIndex: 'totalNum',
+      key: 'totalNum',
+    }, {
+      title: '已处理条数',
+      dataIndex: 'successNum',
+      key: 'successNum',
+    }, {
+      title: '失败条数',
+      dataIndex: 'faildNum',
+      key: 'faildNum',
+    }, {
+      title: '创建时间',
+      dataIndex: 'createDate',
+      key: 'createDate',
+    }, {
+      title: '完成时间',
+      dataIndex: 'updateDate',
+      key: 'updateDate',
+    }, {
+      title: '状态',
+      key: 'state',
+      render: (text, record) => (
+        <span>
+          { record.state < 2 ? (record.state < 1 ? '已导入' : '处理中') : '已处理完成'}
+        </span>
+      ),
+    },
+  ];
+  // 设置页面数据
+  const getBodyWrapperProps = {
+    page: location.query.page,
+    current: pageInfo.current,
+  };
+  const getBodyWrapper = (body) => {
+    return <AnimTableBody {...getBodyWrapperProps} body={body} />;
+  };
+
+  /* addmodal */
+  // 信息
+  const modalProps = {
+    ntype,
+    modalVisible,
+    onOk(data) {
+      dispatch({
+        type: 'industry/addData',
+        payload: data,
+      });
+    },
+  };
+
+  return (
+    <div className="content-inner">
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="导入基础产业服务数据" key="1">
+          <Row style={{ paddingBottom: 20 }}>
+            <Col span={7}>
+              产业类别：<Select style={{ width: '70%' }} placeholder="选择产业类型" onChange={handleSChange}>{selectOption}</Select>
+            </Col>
+            <Col span={2}>
+              <Upload {...propss} onRemove={handleRemove}>
+                <Button>
+                  <Icon type="upload" /> 上传
+                </Button>
+              </Upload>
+            </Col>
+            <Col span={4}>
+              <Button type="primary" loading={modalVisible} onClick={handleClick}>导入</Button>
+            </Col>
+          </Row>
+          <Table
+            {...listProps}
+            className={classnames({ [styles.table]: true })}
+            columns={columns}
+            dataSource={list}
+            loading={loading.effects['industry/queryiList']}
+            rowKey={record => record.id}
+            getBodyWrapper={getBodyWrapper}
+          />
+        </TabPane>
+        <TabPane tab="新增基础产业数据" key="2">
+          <Modal {...modalProps} />
+        </TabPane>
+      </Tabs>
+    </div>
+  );
+};
+
+IndustryImport.PropTypes = {
+  industry: PropTypes.object,
+  dispatch: PropTypes.func,
+  location: PropTypes.object,
+  loading: PropTypes.object,
+};
+
+
+export default connect(({ industry, loading }) => ({ industry, loading }))(IndustryImport);
