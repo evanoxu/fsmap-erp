@@ -131,6 +131,42 @@ const Routers = ({ history, app }) => {
             }, 'publicdetails');
           },
         },
+        {
+          path: 'evaluate/map/',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/evaluate'));
+              cb(null, require('./routes/evaluate/map'));
+            }, 'evaluatemap');
+          },
+        },        
+        {
+          path: 'evaluate/public/',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/evaluate'));
+              cb(null, require('./routes/evaluate/public'));
+            }, 'evaluatepublic');
+          },
+        },
+        {
+          path: 'evaluate/auth/',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/evaluate'));
+              cb(null, require('./routes/evaluate/auth'));
+            }, 'evaluateauth');
+          },
+        },
+        {
+          path: 'evaluate/problem/',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/evaluate'));
+              cb(null, require('./routes/evaluate/problem'));
+            }, 'evaluateproblem');
+          },
+        },                        
       ],
     },
   ];

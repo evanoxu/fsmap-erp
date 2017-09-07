@@ -318,13 +318,14 @@ class PlateLoad extends React.Component {
     const {zoom} = this.state;
     return (
       <div className="">
+        <p style={{padding:'10px'}}>12-15级别可查看  最好在16-19级别编辑</p>
         <div className="" style={{paddingBottom:'20px'}}>
           {
             zoomArr.map((obj,i)=>
                <Button type={zoom==obj?'primary':''} style={{margin:'0 10px'}} onClick={this.setZoom.bind(this,obj)} key={i}>{obj}级别</Button>)
           }
         </div>
-        <BDMap style={{height:'600px'}} initCB={this.handleMap.bind(this)} />
+        <BDMap style={{height:'600px'}} initCB={this.handleMap.bind(this)} />       
       </div>
     )
   }
