@@ -67,15 +67,26 @@ class PlateLoad extends React.Component {
     _map.removeControl(control.Scale);
     _map.disableDoubleClickZoom()
     _map.disableContinuousZoom()  
+    _map.setZoom(16)
     setTimeout(function(){
-      var overlays = [];
+      var overlays = {}; 
+      var len = 0;
       var overlaycomplete = function(e){
         drawingManager.close()
-        overlays.push(e.overlay);
-        _this.addHandler('',e.overlay)
-        this.setState({
-          overlays,
+        var json = _this.state.json
+        len++;
+        var id = '-'+len
+        var query = {
+          content: {id,name:''},
+          polygon: e.overlay  
+        }
+        query.polygon.sid = id
+        json[id] = query
+        _this.addHandler(query.content,query.polygon)
+        _this.setState({
+          json
         })
+
       };
 
       var styleOptions = {
@@ -90,7 +101,7 @@ class PlateLoad extends React.Component {
       //实例化鼠标绘制工具
       var drawingManager = new window.BMapLib.DrawingManager(_map, {
           isOpen: false, //是否开启绘制模式
-          enableDrawingTool: false, //是否显示工具栏
+          enableDrawingTool: true, //是否显示工具栏
           drawingToolOptions: {
               anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
               offset: new window.BMap.Size(5, 5), //偏离值
@@ -122,11 +133,8 @@ class PlateLoad extends React.Component {
         return false;
       }
       var path = ''
-      if(id){
-        path = _this.state.json[id].getPath()
-      }else{
-        path = ''
-      }
+      var isnew = Number(id)<0
+      path = _this.state.json[id].polygon.getPath()
       var pathArr = []
       path.map(function(g,i){
         pathArr.push(g.lng+','+g.lat)
@@ -136,65 +144,77 @@ class PlateLoad extends React.Component {
         levels: '12,13,14,15,16,17,18,19',
         lnglat: pathArr.join(';')
       }
-      if(id) query.id = id 
-       _this.props.savaPlate(query)
+      if(!isnew) query.id = id 
+      _this.props.savaPlate(query)
+      _this.setState({
+        savaId: id
+      })     
     }  
 
     // 删除
     window.deletePlate = function(id){
-      if(id){
+      var isnew = Number(id)<0
+      if(!isnew){
         var query = {
           id: id
         }
         _this.props.deletePlate(query)
       }else{
-        obj.hide()
-        map.closeInfoWindow()
+        var json = _this.state.json;
+        json[id].polygon.hide()
+        _map.closeInfoWindow()
       }
+      _this.setState({
+        savaId: id
+      })      
     }         
   };
+
+  clickfun(e){
+    var _this = this
+    const { map,json }  = this.state
+    var obj = e.currentTarget
+    if(_this.state.cilck){
+      _this.state.cilck.disableEditing();
+      _this.setState({
+        cilck: ''
+      })         
+    }
+    var center = obj.getBounds().getCenter()
+    var point = new BMap.Point(center.lng, center.lat);
+    var id = obj.sid;
+    var name = json[id].content.name
+    var html = '<div style="padding-top:15px;"><input type="text" placeholder="请输入你要查询的地址" value="'+name+'" id="Polygon" class="ant-input ant-input-lg"></div><div class="ant-col-xs-24" style="padding-top: 10px;text-center:right"><button type="button" class="ant-btn ant-btn-primary ant-btn-lg" onclick="savaPlate('+id+')" style="margin-right: 16px;"><span>保 存</span></button><button type="button" class="ant-btn ant-btn-lg" onclick="deletePlate('+id+')"><span>删 除</span></button></div>'      
+    var infoWindow = new BMap.InfoWindow(html,{
+      width : 250,
+      height: 90,
+    });
+    map.openInfoWindow(infoWindow,point);        
+  }
+
+  rightclickfun(e){
+    var _this = this
+    const { map,json }  = this.state
+    var obj = e.currentTarget
+    if(_this.state.cilck==obj){
+      obj.disableEditing();
+      _this.setState({
+        cilck: ''
+      })        
+    }else{
+      if(_this.state.cilck) _this.state.cilck.disableEditing();
+      obj.enableEditing();
+      _this.setState({
+        cilck: obj
+      })
+    }     
+  }
 
   addHandler(content,obj){
     var _this = this
     const { map }  = this.state
-    var html = '<p><input type="text" value="" id="Polygon"/></p><p><a onclick="savaPlate()">保存</a></p><p><a onclick="deletePlate()">删除</a></p>'
-    if(content){
-      html = '</p><input type="text" value="'+content.name+'" id="Polygon"/></p><p><a onclick="savaPlate('+content.id+')">保存</a></p><p><a onclick="deletePlate('+content.id+')">删除</a></p>'
-    }
-
-
-    // 点击保存删除      
-    obj.addEventListener("click",function(e){
-      if(_this.state.cilck){
-        _this.state.cilck.disableEditing();
-        _this.setState({
-          cilck: ''
-        })         
-      }
-      var center = obj.getBounds().getCenter()
-      var point = new BMap.Point(center.lng, center.lat);
-      var infoWindow = new BMap.InfoWindow(html,{
-        width : 250,
-        height: 80,
-      });
-      map.openInfoWindow(infoWindow,point);       
-    }) 
-
-    // 右键编辑
-    obj.addEventListener("rightclick",function(e){
-      if(_this.state.cilck==obj){
-        obj.disableEditing();
-        _this.setState({
-          cilck: ''
-        })        
-      }else{
-        if(_this.state.cilck) _this.state.cilck.disableEditing();
-        obj.enableEditing();
-        _this.setState({
-          cilck: obj
-        })
-      }
-    });
+    obj.addEventListener("click",this.clickfun.bind(this)) 
+    obj.addEventListener("rightclick",this.rightclickfun.bind(this));
   } 
 
   setZoom= (value) =>{
@@ -212,7 +232,7 @@ class PlateLoad extends React.Component {
   }  
   componentWillReceiveProps(nextProps){
     const { list,isDelete,isSava } = nextProps;
-    const { map } = this.state
+    const { map,savaId } = this.state
     var len = this.props.list.length
     if(len!==nextProps.list.length){
       var json = {}
@@ -229,19 +249,50 @@ class PlateLoad extends React.Component {
           var polygon = new window.BMap.Polygon(PolygonJSON,{fillColor:'#758dd3',fillOpacity:0.8, strokeWeight:0.01, strokeOpacity:0});
           map.addOverlay(polygon);
           var content = list[i]
-           // console.log(content.name,content.id,content.lnglat)
-          json[Polygonid] = polygon
+          json[Polygonid] = {
+            content,polygon
+          }
+          polygon.sid = Polygonid
           this.addHandler(content,polygon);
+          // if(i==4) break;
       }  
       this.setState({
         json,
       })
     } 
     if(isSava!==this.props.isSava){
-      if(isSava) map.closeInfoWindow()
+      if(!isSava) return;
+      map.closeInfoWindow()
+      var content = {
+        id:isSava.id,
+        name:isSava.name,          
+      }   
+      var json = this.state.json   
+      if(Number(savaId)<0){
+        //新增
+
+        json[isSava.id] = {
+          content: content,
+          polygon: json[savaId].polygon
+        } 
+        json[savaId].polygon.sid =  content.id  
+        this.setState({
+          json
+        })   
+      }else{
+        //编辑
+        var json = this.state.json
+        json[savaId].content = content
+        this.setState({
+          json
+        })  
+
+      }
     } 
     if(isDelete!==this.props.isDelete){
-      if(isDelete) map.closeInfoWindow()
+      if(!isDelete) return
+      map.closeInfoWindow()
+      this.state.json[savaId].polygon.hide()
     }          
   }
   render () {

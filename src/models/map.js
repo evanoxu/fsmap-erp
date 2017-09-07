@@ -575,7 +575,7 @@ export default {
         yield put({
           type: 'updateState',
           payload: {
-            isSava: true,
+            isSava: data,
           },
         });
       } else {
