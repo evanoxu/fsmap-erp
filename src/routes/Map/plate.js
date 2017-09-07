@@ -11,7 +11,6 @@ const TabPane = Tabs.TabPane;
 
 import { Config } from '../../utils';
 
-
 const MapManage = ({ map, dispatch, location, loading }) => {
   const { plist, ppageInfo, plateLoad, isSava, isDelete } = map;
   const { query = {}, pathname } = location;
@@ -33,6 +32,23 @@ const MapManage = ({ map, dispatch, location, loading }) => {
         },
       }));
     },
+    onEdit(id) {
+      const { query, pathname } = location;
+      dispatch(routerRedux.push({
+        pathname,
+        query: {
+          status: Config.plate.add,
+          edit: id,
+        },
+      }));
+      // window.location.href = 'http://localhost:3004/map/plate?edit=3667&status=add'
+      // dispatch(routerRedux.push({
+      //   pathname,
+      //   query: {
+      //     status: 'add',
+      //   },
+      // }));      
+    },    
     deletePlate(id) {
       dispatch({
         type: 'map/dataPlateCDelete',
@@ -66,6 +82,7 @@ const MapManage = ({ map, dispatch, location, loading }) => {
     isSava,
     isDelete,
     list:plateLoad,
+    location,
     savaPlate(id) {
       dispatch({
         type: 'map/dataPlateDrawSave',
@@ -88,9 +105,10 @@ const MapManage = ({ map, dispatch, location, loading }) => {
       },
     }));
   }
+
   return (
     <div className="content-inner">
-      <Tabs defaultActiveKey={keys} onTabClick={handleTabClick}>
+      <Tabs activeKey={keys} onTabClick={handleTabClick}>
         <TabPane tab="板块管理" key={Config.plate.list}>
           {
             keys==Config.plate.list &&

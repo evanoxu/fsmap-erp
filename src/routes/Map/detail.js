@@ -14,7 +14,6 @@ const TabPane = Tabs.TabPane;
 
 const Mapdetail = ({ map, dispatch, location, loading }) => {
   const { dlist, dpagefo, dtype, dcurItem, modalVisible } = map;
-  console.log(dpagefo)
   // 列表数据
   
   // 显示弹窗数据

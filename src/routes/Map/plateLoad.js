@@ -54,7 +54,8 @@ class PlateLoad extends React.Component {
     super(props)
     this.state = {
       map: null,
-      cilck: null
+      cilck: null,
+      zoom: 16
     }
   } 
   
@@ -67,7 +68,7 @@ class PlateLoad extends React.Component {
     _map.removeControl(control.Scale);
     _map.disableDoubleClickZoom()
     _map.disableContinuousZoom()  
-    _map.setZoom(16)
+    _map.setZoom(this.state.zoom)
     setTimeout(function(){
       var overlays = {}; 
       var len = 0;
@@ -167,7 +168,12 @@ class PlateLoad extends React.Component {
       _this.setState({
         savaId: id
       })      
-    }         
+    } 
+    _map.addEventListener("zoomend",function(){
+      _this.setState({
+        zoom:_map.getZoom()
+      })
+    })       
   };
 
   clickfun(e){
@@ -218,22 +224,29 @@ class PlateLoad extends React.Component {
   } 
 
   setZoom= (value) =>{
-    const { map } = this.state
+    const { map,cilck} = this.state
     var _this = this
     if(!map) return
-    map.setZoom(value)
-    _this.setState({
-      cilck: ''
-    })
+    if(cilck){
+      var center = cilck.getBounds().getCenter()
+      var point = new BMap.Point(center.lng, center.lat);      
+      map.centerAndZoom(point,value)
+    }else{
+      map.setZoom(value)
+    }
   }
   componentWillUnmount(){
     DelScript('DrawingManager')
     window.savaPlate = window.deletePlate = null;
   }  
   componentWillReceiveProps(nextProps){
-    const { list,isDelete,isSava } = nextProps;
+    const { list,isDelete,isSava,location} = nextProps;
     const { map,savaId } = this.state
     var len = this.props.list.length
+    var editId = '';
+    if(location.query.edit){
+      editId = location.query.edit
+    }
     if(len!==nextProps.list.length){
       var json = {}
       for (var i = 0; i < list.length; i++) {
@@ -296,14 +309,14 @@ class PlateLoad extends React.Component {
     }          
   }
   render () {
-    const zoom = [12,13,14,15,16,17,18,19]
+    const zoomArr = [12,13,14,15,16,17,18,19];
+    const {zoom} = this.state;
     return (
       <div className="">
         <div className="" style={{paddingBottom:'20px'}}>
           {
-            zoom.map((obj,i)=>
-               <Button type="primary" style={{margin:'0 10px'}} onClick={this.setZoom.bind(this,obj)} key={i}>{obj}级别</Button>  
-            )
+            zoomArr.map((obj,i)=>
+               <Button type={zoom==obj?'primary':''} style={{margin:'0 10px'}} onClick={this.setZoom.bind(this,obj)} key={i}>{obj}级别</Button>)
           }
         </div>
         <BDMap style={{height:'600px'}} initCB={this.handleMap.bind(this)} />

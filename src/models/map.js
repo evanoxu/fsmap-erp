@@ -484,7 +484,6 @@ export default {
       const data = yield call(dataDetailList, payload);
       if (data.statusCode === 200) {
         const { list, pageInfo } = data;
-        console.log(1,pageInfo.totalRecords)
         yield put({
           type: 'updateState',
           payload: {

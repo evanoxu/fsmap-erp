@@ -5,7 +5,7 @@ import { classnames } from '../../utils';
 import AnimTableBody from '../../components/DataTable/AnimTableBody';
 import styles from './list.less';
 
-const PlateList = ({ datass, location, loading, deletePlate, onEditItem, ...listProps }) => {
+const PlateList = ({ datass, location, loading, deletePlate, onEdit, ...listProps }) => {
 
   const columns = [
     {
@@ -42,7 +42,7 @@ const PlateList = ({ datass, location, loading, deletePlate, onEditItem, ...list
 
   // 获取编辑信息
   const handleEditClick = (id) => {
-    //onEditItem(id);
+    onEdit(id);
   }
 
   // 删除地图基础数据
