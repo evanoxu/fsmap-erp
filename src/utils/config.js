@@ -49,6 +49,14 @@ module.exports = {
       router: '/map/plate',
     },
     {
+      id: 16,
+      bpid: 14,
+      mpid: -1,
+      icon: 'laptop',
+      name: '详情列表',
+      router: '/map/detail/:type/:id',
+    },
+    {
       id: 2,
       icon: 'team',
       name: '公共服务',
@@ -84,6 +92,14 @@ module.exports = {
       icon: 'team',
       name: '详情管理',
       router: '/public/detail',
+    },
+    {
+      id: 25,
+      bpid: 24,
+      mpid: -1,
+      icon: 'team',
+      name: '详情列表',
+      router: '/public/detail/:type/:id',
     },
   ],
   city: [{

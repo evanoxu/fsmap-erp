@@ -8,7 +8,7 @@ import { arrayToTree, queryArray } from '../../utils';
 
 const Menus = ({ menu, changeOpenKeys, navOpenKeys }) => {
   // 生成树状
-  const menuTree = arrayToTree(menu.filter(_ => _.mpid !== '-1'), 'id', 'mpid');
+  const menuTree = arrayToTree(menu.filter(_ => _.mpid !== -1), 'id', 'mpid');
   const levelMap = {};
 
   // 递归生成菜单

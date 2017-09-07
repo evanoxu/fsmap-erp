@@ -47,7 +47,7 @@ const Bread = ({ menu }) => {
     return (
       <Breadcrumb.Item key={key}>
         {((pathArray.length - 1) !== key)
-          ? <Link to={item.route}>
+          ? <Link to={item.router}>
             {content}
           </Link>
           : content}

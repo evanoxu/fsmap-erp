@@ -63,8 +63,8 @@ let API = {
   dataPlateSpeedSave: 'platespeed/admin/admin/editSave',
   dataPlateSpeedDelete: 'platespeed/admin/delete/',
   // 2.公共服务地图
-  //    基础数据管理
   publicDataType: 'publicService/allPublicTypes',
+  //    基础数据管理
   publicDataFind: 'publicService/findPsData',
   publicDataEdit: 'publicService/showEidtData/',
   publicDataDelete: 'publicService/deletePs/',
@@ -94,6 +94,31 @@ let API = {
   publicDetailList: 'publicService/detailPageList',
   publicDetailComment: 'plate/commentDetail/',
   publicDetailDelete: 'plate/deleteComment/',
+  // 3.产业地图
+  industryTypePage: 'type/ajaxIndustry',
+  //    基础数据管理
+  industryDataFind: 'industry/findList',
+  industryDataAdd: 'industry/adminAddIndustry',
+  industryDataEdit: 'industry/editById/',
+  industryDataSave: 'industry/adminAddIndustry',
+  industryDataDelete: 'industry/delById/',
+  industryDataExport: 'industry/export',
+  //    基础数据导入
+  industryImportLogList: 'importlog/admin/importloglist/industry',
+  industryImportUpExcel: 'upload/uploadExcel',
+  industryImportExcel: 'merchant/admin/industry/importExcel',
+  //    专题管理
+  industryTypeList: 'type/industryTypeList',
+  industryTypeAdd: 'type/saveIndustry',
+  industryTypeEidt: 'type/industryEdit/',
+  industryTypeSave: 'type/saveIndustry',
+  industryTypeDelete: 'type/publicSerrviceDelete/',
+  industryTypeCheck: 'type/checkIndustryTypeName',
+  industryTypeUpPic: 'upload/uploadTypePic',
+  //    详情管理
+  industryDetailList: 'industry/commentList',
+  industryDetailComment: 'plate/commentDetail/',
+  industryDetailDelete: 'plate/deleteComment/',
   // 4.服务评价
   evaUserList: 'evauser/userList',
   //    宽带管理
