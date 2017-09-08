@@ -173,8 +173,8 @@ export default {
     * editData({ payload }, { call, put }) {
       const data = yield call(industryDataEdit, { id: payload });
       if (data.statusCode === 200) {
-        const { id, address, areaId, industryName, industryType, industryTypeName, orgCode, registNum, registMoney, registState, phoneNum, introduction, setupTime } = data;
-        const curItem = { id, address, areaId, industryName, industryType, industryTypeName, orgCode, registNum, registMoney, registState, phoneNum, introduction, setupTime };
+        const { id, address, areaId, industryName, lnglat, industryType, industryTypeName, orgCode, registNum, registMoney, registState, phoneNum, introduction, setupTime } = data;
+        const curItem = { id, address, areaId, industryName, lnglat, industryType, industryTypeName, orgCode, registNum, registMoney, registState, phoneNum, introduction, setupTime };
         yield put({
           type: 'showModal',
           payload: {
@@ -190,8 +190,8 @@ export default {
       // 获取id
       const id = yield select(({ industry }) => industry.curItem.id);
       // 获取创建人
-      const createName = Storage.getStorage('USERINFO').info.name;
-      const newSer = { ...payload, id, createName };
+      const lastUpdateName = Storage.getStorage('USERINFO').info.name;
+      const newSer = { ...payload, id, lastUpdateName };
       const data = yield call(industryDataSave, newSer);
       if (data.statusCode === 200) {
         yield put({ type: 'hideModal' });

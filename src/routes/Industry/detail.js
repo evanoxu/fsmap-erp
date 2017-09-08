@@ -33,16 +33,6 @@ const IndustryDetail = ({ industry, dispatch, location, loading }) => {
       dataIndex: 'industryTypeName',
       key: 'industryTypeName',
     }, {
-      title: '标注者',
-      dataIndex: 'createName',
-      key: 'createName',
-      width: 100,
-    }, {
-      title: '标注时间',
-      dataIndex: 'createDate',
-      key: 'createDate',
-      width: 100,
-    }, {
       title: '操作',
       key: 'operation',
       width: 140,

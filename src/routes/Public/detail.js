@@ -94,16 +94,6 @@ const PublicDetail = ({ pub, dispatch, location, loading }) => {
         <span>{pSubTypeFunc(publicServiceType, publicServiceSubType)}</span>
       ),
     }, {
-      title: '标注者',
-      dataIndex: 'createName',
-      key: 'createName',
-      width: 100,
-    }, {
-      title: '标注时间',
-      dataIndex: 'createDate',
-      key: 'createDate',
-      width: 100,
-    }, {
       title: '操作',
       key: 'operation',
       width: 140,

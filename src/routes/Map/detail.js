@@ -24,13 +24,9 @@ const Mapdetail = ({ map, dispatch, location, loading }) => {
       dataIndex: 'tag',
       key: 'tag',
     }, {
-      title: '标注时间',
-      dataIndex: 'createDate',
-      key: 'createDate',
-    }, {
-      title: '更新时间',
-      dataIndex: 'updateDate',
-      key: 'updateDate',
+      title: '可显示级别',
+      dataIndex: 'levels',
+      key: 'levels',
     }, {
       title: '操作',
       key: 'operation',

@@ -199,8 +199,8 @@ export default {
       // 获取id
       const id = yield select(({ pub }) => pub.curItem.id);
       // 获取创建人
-      const createName = Storage.getStorage('USERINFO').info.name;
-      const newSer = { ...payload, id, createName };
+      const lastUpdateName = Storage.getStorage('USERINFO').info.name;
+      const newSer = { ...payload, id, lastUpdateName };
       const data = yield call(publicDataSave, newSer);
       if (data.statusCode === 200) {
         yield put({ type: 'hideModal' });

@@ -21,7 +21,7 @@ const IndustryDetails = ({ industry, dispatch, location, loading }) => {
       title: '标注图片',
       key: 'imgList',
       render: (text, { imgList }) => (
-        <span>{imgList.map((k, i) => (<img key={i} src={k} width="100" height="100" />))}</span>
+        <span>{imgList.map((k, i) => (<a key={i} href={k} target="_blank"><img src={k} width="100" height="100" /></a>))}</span>
       ),
     }, {
       title: '标注者',
