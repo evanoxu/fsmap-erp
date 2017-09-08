@@ -1,6 +1,7 @@
 /* global window */
 import { logout } from '../services/app';
 import { Storage, Config } from '../utils';
+import { routerRedux } from 'dva/router';
 
 export default {
   namespace: 'app',
@@ -27,7 +28,7 @@ export default {
       return {
         ...state,
         ...navOpenKeys,
-      }
+      };
     },
   },
   effects: {
@@ -44,9 +45,15 @@ export default {
             menu,
           },
         });
+        // 判断访问页面 如果是'/'，跳转。
+        if (location.pathname === '/') {
+          yield put(routerRedux.push({
+            pathname: '/map/manage',
+          }));
+        }
       } else if (Config.openPages && Config.openPages.indexOf(location.pathname) < 0) {
-        // let from = location.pathname;
-        window.location = `${location.origin}/login?from=/map/manage`;
+        let from = location.pathname;
+        window.location = `${location.origin}/login?from=${from}`;
       }
     },
     // 退出登录

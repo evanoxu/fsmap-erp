@@ -8,7 +8,6 @@ import Modal from './modal';
 
 const MapManage = ({ map, dispatch, location, loading }) => {
   const { list, pageInfo, itype, currentItem, modalVisible } = map;
-  console.log(pageInfo)
   // 列表数据
   const listProps = {
     datass: list,

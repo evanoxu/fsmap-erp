@@ -212,6 +212,33 @@ const Routers = ({ history, app }) => {
             }, 'evaluateproblem');
           },
         },
+        {
+          path: 'user/manage',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/user'));
+              cb(null, require('./routes/User/manage'));
+            }, 'usermanage');
+          },
+        },
+        {
+          path: 'user/role',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/user'));
+              cb(null, require('./routes/User/role'));
+            }, 'userrole');
+          },
+        },
+        {
+          path: 'user/menu',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/user'));
+              cb(null, require('./routes/User/menu'));
+            }, 'usermenu');
+          },
+        },
       ],
     },
   ];

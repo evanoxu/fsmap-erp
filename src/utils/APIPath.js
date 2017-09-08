@@ -142,11 +142,34 @@ let API = {
   evaProbSave: 'type/saveProblem',
   evaProbCheck: 'type/findMapType',
 
-
-  
-  // 5.用户管理
+  // 8.用户管理
   login: 'system/user/adminLogin',
   logout: 'newuser/logout',
+  //    用户管理接口
+  userCheck: 'system/user/adminCheckAcc',
+  userCheckName: 'system/user/adminCheckName',
+  userRoleList: 'system/user/userRoleList',
+  userList: 'system/user/show99UserData',
+  userAdd: 'system/user/save99User',
+  userEdit: 'system/user/showDetail99Data/',
+  userSave: 'system/user/save99User',
+  userDelete: 'system/user/delete99User/',
+  //    角色管理接口
+  adminRoleList: 'system/user/adminRoleList',
+  adminRoleEdit: 'system/user/adminShowEditData/',
+  adminRoleSave: 'system/user/adminAddRoles',
+  adminRoleDelete: 'system/user/adminDelRole/',
+  adminMenuRoleList: 'system/user/adminAddRoleList',
+  adminRoleCheck: 'system/user/adminCheckRoleName',
+  adminRoleAdd: 'system/user/adminAddRoles',
+  //    菜单管理接口
+  adminMenuList: 'system/user/adminMenuList',
+  adminMenuEdit: 'system/user/adminMenuEditData/',
+  adminMenuSave: 'system/user/adminSaveMenu',
+  adminMenuDelete: 'system/user/adminDelMenu/',
+  adminMenuPList: 'system/user/adminParentMenu',
+  adminMenuCheck: 'system/user/adminCheckMenuName',
+  adminMenuAdd: 'system/user/adminSaveMenu',
 };
 
 for (let key in API) {
