@@ -122,7 +122,7 @@ const IndustryManage = ({ industry, dispatch, location, loading }) => {
       title: '最后更新时间',
       dataIndex: 'lastUpdateDate',
       key: 'lastUpdateDate',
-      width: 100,
+      width: 140,
     }, {
       title: '操作',
       width: 140,

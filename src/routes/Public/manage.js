@@ -108,7 +108,7 @@ const PublicManage = ({ pub, dispatch, location, loading }) => {
       title: '办事指南',
       dataIndex: 'introduction',
       key: 'introduction',
-      width: 210,
+      width: 190,
     }, {
       title: '电话',
       dataIndex: 'phoneNumber',
@@ -133,7 +133,7 @@ const PublicManage = ({ pub, dispatch, location, loading }) => {
       title: '最后更新时间',
       dataIndex: 'lastUpdateDate',
       key: 'lastUpdateDate',
-      width: 100,
+      width: 140,
     }, {
       title: '操作',
       width: 140,
