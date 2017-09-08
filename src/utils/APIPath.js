@@ -137,7 +137,7 @@ let API = {
   evaUserTop: 'evauser/uperManagerList/',
 
   evaProbList: 'type/mapProblemList',
-  evaProbEdit: 'type/mapProblemEdit',
+  evaProbEdit: 'type/mapProblemEdit/',
   evaProbDelete: 'type/mapDelete/',
   evaProbSave: 'type/saveProblem',
   evaProbCheck: 'type/findMapType',
