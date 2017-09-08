@@ -177,7 +177,7 @@ const Routers = ({ history, app }) => {
           },
         },
         {
-          path: 'evaluate/map/',
+          path: 'evaluate/map',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
               registerModel(app, require('./models/evaluate'));
@@ -186,16 +186,16 @@ const Routers = ({ history, app }) => {
           },
         },
         {
-          path: 'evaluate/public/',
+          path: 'evaluate/public',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
               registerModel(app, require('./models/evaluate'));
-              cb(null, require('./routes/evaluate/public'));
+              cb(null, require('./routes/evaluate/map'));
             }, 'evaluatepublic');
           },
         },
         {
-          path: 'evaluate/auth/',
+          path: 'evaluate/auth',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
               registerModel(app, require('./models/evaluate'));
@@ -204,7 +204,7 @@ const Routers = ({ history, app }) => {
           },
         },
         {
-          path: 'evaluate/problem/',
+          path: 'evaluate/problem',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
               registerModel(app, require('./models/evaluate'));

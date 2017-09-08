@@ -119,17 +119,31 @@ let API = {
   industryDetailList: 'industry/commentList',
   industryDetailComment: 'plate/commentDetail/',
   industryDetailDelete: 'plate/deleteComment/',
+
+
   // 4.服务评价
+  evaList:'evaluation/adminEvaList/',
+  evaSetend:'evaluation/setEvaEnd',
+  evaDelete:'evaluation/adminEvaDele/',
+
   evaUserList: 'evauser/userList',
-  //    宽带管理
-  //    公共管理
-  //    权限管理
-  //    问题管理
+  evaUserAuth: 'evauser/userMenuList/',
+  evaUserEdit: 'evauser/userEdit/',
+  evaUserSave: 'evauser/saveUser/',
+  evaUserDelete: 'evauser/userDelete/',
+  evaUsercheckAccount: 'evauser/checkAccount/',
+  evaUsercheckName: 'evauser/checkName/',
+  evaUsercheckTelPhone: 'evauser/checkTelPhone/',
+  evaUserTop: 'evauser/uperManagerList/',
+
   evaProbList: 'type/mapProblemList',
   evaProbEdit: 'type/mapProblemEdit',
   evaProbDelete: 'type/mapDelete/',
   evaProbSave: 'type/saveProblem',
   evaProbCheck: 'type/findMapType',
+
+
+  
   // 5.用户管理
   login: 'system/user/adminLogin',
   logout: 'newuser/logout',

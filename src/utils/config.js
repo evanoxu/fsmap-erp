@@ -157,7 +157,7 @@ module.exports = {
       mpid: 6,
       icon: 'layout',
       name: '宽带服务评价',
-      router: '/evaluate/map/',
+      router: '/evaluate/map',
     },
     {
       id: 602,
@@ -165,7 +165,7 @@ module.exports = {
       mpid: 6,
       icon: 'layout',
       name: '公共服务评价',
-      router: '/evaluate/public/',
+      router: '/evaluate/public',
     },
     {
       id: 603,
@@ -173,7 +173,7 @@ module.exports = {
       mpid: 6,
       icon: 'layout',
       name: '用户权限管理',
-      router: '/evaluate/auth/',
+      router: '/evaluate/auth',
     },
     {
       id: 604,
@@ -181,7 +181,7 @@ module.exports = {
       mpid: 6,
       icon: 'layout',
       name: '评价问题类型管理',
-      router: '/evaluate/problem/',
+      router: '/evaluate/problem',
     },
   ],
   city: [{
