@@ -10,14 +10,17 @@ export default {
   namespace: 'evaluate',
 
   state: {
-    //
+    //评价列表
     list: [],
     pageInfo: { current: 1, pageSize: 10, total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
     //问题分类
     prolist:[],
     propageInfo:{ current: 1, pageSize: 10, total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
     editInfo:null,
-    modalVisible: false
+    modalVisible: false,
+    //用户权限
+    authlist:[],
+    authpageInfo:{ current: 1, pageSize: 10, total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
   },
 
   subscriptions: {
@@ -47,6 +50,17 @@ export default {
               },
             });          
           break;  
+          case '/evaluate/auth':
+            var currentPage, pageSize;
+            currentPage = Number(query.page) || 1;
+            pageSize = Number(query.pageSize) || 10;
+            dispatch({
+              type: 'evaUserList',
+              payload: {
+                currentPage,pageSize
+              },
+            });          
+          break;           
           case '/evaluate/problem':
             var currentPage, pageSize;
             currentPage = Number(query.page) || 1;
@@ -217,6 +231,101 @@ export default {
         throw data.statusMsg;
       }
     },
+
+
+    * evaUserList({ payload }, { call, put }) {
+      yield put({
+        type: 'updateState',
+        payload: {
+          authlist:[]
+        },
+      });      
+      const data = yield call(services.evaUserList, payload);
+      if (data.statusCode === 200) {
+        const { list, pageInfo } = data;
+        yield put({
+          type: 'updateState',
+          payload: {
+            authlist:list,
+            authpageInfo: {
+              current: payload.currentPage,
+              pageSize: payload.pageSize,
+              total: pageInfo.totalRecords,
+            },
+          },
+        });
+      } else {
+        throw data.statusMsg;
+      }
+    },
+
+
+    * evaUserEdit({ payload }, { call, put }) {
+      yield put({
+        type: 'updateState',
+        payload: {
+          editInfo:null
+        },
+      });      
+      const data = yield call(services.evaUserEdit, payload);
+      if (data.statusCode === 200) {
+        const {id,account,password,name,telphone,state,isUperManage,uperManageAccount,menus,hasMyMap} = data.userMsg
+        var query = {
+          id,account,password,name,telphone,state,isUperManage,uperManageAccount,menus,hasMyMap
+        }
+        yield put({
+          type: 'updateState',
+          payload: {
+            editInfo:query,
+            modalVisible: true
+          },
+        });
+      } else {
+        throw data.statusMsg;
+      }
+    },
+
+    * evaUserSave({ payload }, { call, put }) {     
+      const data = yield call(services.evaUserSave, payload);
+      if (data.statusCode === 200) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            modalVisible:false,
+            editInfo:null
+          },
+        }); 
+        var currentPage, pageSize;
+        currentPage = Number(queryURL('page') || 1)
+        pageSize = Number(queryURL('pageSize') || 10)
+        yield put({
+          type: 'evaUserList',
+          payload: {
+            currentPage,pageSize
+          },
+        }); 
+      } else {
+        throw data.statusMsg;
+      }
+    },
+
+    * evaUserDelete({ payload }, { call, put }) {     
+      const data = yield call(services.evaUserDelete, payload);
+      if (data.statusCode === 200) {
+        var currentPage, pageSize;
+        currentPage = Number(queryURL('page') || 1)
+        pageSize = Number(queryURL('pageSize') || 10)
+        yield put({
+          type: 'evaUserList',
+          payload: {
+            currentPage,pageSize
+          },
+        }); 
+      } else {
+        throw data.statusMsg;
+      }
+    },
+
     
   },
 
