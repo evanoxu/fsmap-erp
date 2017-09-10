@@ -176,6 +176,50 @@ const Routers = ({ history, app }) => {
             }, 'industrydetails');
           },
         },
+
+        // 4.智慧应用商店
+        {
+          path: 'store/app',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/store'));
+              cb(null, require('./routes/store/app'));
+            }, 'store/app');
+          },
+        },    
+        {
+          path: 'store/needs',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/store'));
+              cb(null, require('./routes/store/app'));
+            }, 'store/needs');
+          },
+        }, 
+
+        {
+          path: 'store/needs/:id',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/store'));
+              cb(null, require('./routes/store/needs'));
+            }, 'store/needs/detail');
+          },
+        },
+
+        // 5.城市大数据
+        {
+          path: 'chart/city',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/chart'));
+              cb(null, require('./routes/chart/city'));
+            }, 'chart/city');
+          },
+        }, 
+
+
+        // 6.服务评价                    
         {
           path: 'evaluate/map',
           getComponent(nextState, cb) {
@@ -212,6 +256,27 @@ const Routers = ({ history, app }) => {
             }, 'evaluateproblem');
           },
         },
+
+        // 7.消息管理
+        {
+          path: 'msg/act',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/msg'));
+              cb(null, require('./routes/msg/act'));
+            }, 'msg/act');
+          },
+        },        
+        {
+          path: 'msg/admin',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/msg'));
+              cb(null, require('./routes/msg/admin'));
+            }, 'msg/admin');
+          },
+        }, 
+
         {
           path: 'user/manage',
           getComponent(nextState, cb) {
