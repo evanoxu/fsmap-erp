@@ -144,6 +144,7 @@ let API = {
   evaUsercheckName: 'evauser/checkName/',
   evaUsercheckTelPhone: 'evauser/checkTelPhone/',
   evaUserTop: 'evauser/uperManagerList/',
+  evaUsermenus: 'evauser/evaRoleList',
 
   evaProbList: 'type/mapProblemList',
   evaProbEdit: 'type/mapProblemEdit/',
@@ -155,11 +156,12 @@ let API = {
   msgList: 'newuser/adminMsgList',
   msgSave: 'newuser/addAdminMsg',
   msgDelete: 'newuser/delAdminMsg',
+  msgSend: 'newuser/delAdminMsg',
 
   actList: 'appStore/bannerList',
   actSave: 'appStore/adminAddBanner',
   actDelete: 'appStore/adminDelBanner/',
-
+  actUpload: 'upload/uploadBannerPic',
 
   // 8.用户管理
   login: 'system/user/adminLogin',
