@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Modal, Select } from 'antd';
+import { Form, Input, Modal, Select, Radio } from 'antd';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
-
+const RadioGroup = Radio.Group;
 
 const formItemLayout = {
   labelCol: {
@@ -100,6 +100,26 @@ const Modals = ({
           {getFieldDecorator('parentUid', {
             initialValue: role,
           })(<Select size="large" style={{ width: '100%' }} placeholder="选择所属菜单">{roleOption}</Select>)}
+        </FormItem>
+        <FormItem label="图标" {...formItemLayout}>
+          {getFieldDecorator('icon', {
+            initialValue: item.icon,
+          })(<Input placeholder="输入图标名" />)}
+        </FormItem>
+        <FormItem label="路由" {...formItemLayout}>
+          {getFieldDecorator('router', {
+            initialValue: item.router,
+          })(<Input placeholder="输入路由链接" />)}
+        </FormItem>
+        <FormItem label="是否显示层级" {...formItemLayout}>
+          {getFieldDecorator('mpid', {
+            initialValue: item.mpid,
+          })(
+            <RadioGroup>
+              <Radio value={1}>显示</Radio>
+              <Radio value={-1}>不显示</Radio>
+            </RadioGroup>
+          )}
         </FormItem>
       </Form>
     </Modal>

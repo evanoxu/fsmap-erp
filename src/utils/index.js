@@ -109,6 +109,7 @@ const arrayToType = (sourceData) => {
     'netops': tagData,
   };
 }
+
 /**
  * 动态加载script
  * @param   {String}    url

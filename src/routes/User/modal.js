@@ -30,7 +30,7 @@ const Modals = ({
   // 设置角色权限
   const roleOption = roles.map(sels => <Option key={sels.name}>{sels.name}</Option>);
 
-  // 查询产业类型名
+  // 查询名
   const roleSet = (id) => {
     if (id) {
       const ad = roles.filter((v) => {
@@ -45,7 +45,7 @@ const Modals = ({
       return '';
     }
   };
-  // 查询产业类型值
+  // 查询值
   const roleFet = (name) => {
     if (name) {
       const ad = roles.filter((v) => {

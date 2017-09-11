@@ -12,6 +12,22 @@ import Modal from './mmodal';
 const userMenu = ({ user, dispatch, location, loading }) => {
   const { list, pageInfo, pmenus, otype, curItem, modalVisible } = user;
 
+  // 查询名
+  const roleSet = (id) => {
+    if (id) {
+      const ad = pmenus.filter((v) => {
+        return v.uid === id;
+      });
+      if (ad.length > 0) {
+        return ad[0].name;
+      } else {
+        return '';
+      }
+    } else {
+      return '';
+    }
+  };
+
   /* Filter */
   // 查询数据
   const filterProps = {
@@ -124,10 +140,25 @@ const userMenu = ({ user, dispatch, location, loading }) => {
       dataIndex: 'name',
       key: 'name',
     }, {
-      title: '是否父类',
+      title: '所属菜单',
       key: 'parentUid',
       render: (text, { parentUid }) => (
-        <span>{ parentUid ? '否' : '是'}</span>
+        <span>{ parentUid ? roleSet(parentUid) : '无' }</span>
+      ),
+    }, {
+      title: '图标',
+      dataIndex: 'icon',
+      key: 'icon',
+    }, {
+      title: '路由',
+      dataIndex: 'router',
+      key: 'router',
+    }, {
+      title: '显示层级',
+      // dataIndex: 'mpid',
+      key: 'mpid',
+      render: (text, { mpid, parentUid }) => (
+        <span>{ parentUid ? (mpid === 1 ? '显示' : '不显示') : '' }</span>
       ),
     }, {
       title: '操作',

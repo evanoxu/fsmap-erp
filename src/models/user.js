@@ -1,7 +1,5 @@
-import { userCheck, userCheckName, userRoleList, userList, userAdd, userEdit, userSave, userDelete, adminRoleList, adminRoleEdit, adminRoleSave, adminRoleDelete, adminMenuRoleList, adminRoleCheck, adminRoleAdd, adminMenuList, adminMenuEdit, adminMenuSave, adminMenuDelete, adminMenuPList, adminMenuCheck, adminMenuAdd } from '../services/user';
-import pathToRegexp from 'path-to-regexp';
+import { userRoleList, userList, userAdd, userEdit, userSave, userDelete, adminRoleList, adminRoleEdit, adminRoleSave, adminRoleDelete, adminMenuRoleList, adminRoleAdd, adminMenuList, adminMenuEdit, adminMenuSave, adminMenuDelete, adminMenuPList, adminMenuAdd } from '../services/user';
 import { queryURL, Storage } from '../utils';
-import { routerRedux } from 'dva/router';
 
 export default {
 
@@ -236,31 +234,16 @@ export default {
     * queryMenuType({ payload }, { call, put }) {
       const data = yield call(adminMenuRoleList, payload);
       if (data.statusCode === 200) {
-        let type = [], menus = [];
+        let menus = [];
         for (let i in data) {
           if (i != 'statusMsg' && i != 'statusCode') {
-            let datas;
-            if (data[i].menus.length == 0) {
-              datas = {
-                label: data[i].name,
-                value: i,
-              };
-            } else {
-              const cdata = data[i].menus;
-              let cdatas = [];
-              for (let j in cdata) {
-                const datass = {
-                  label: cdata[j].name,
-                  value: cdata[j].uid,
-                };
-                cdatas.push(datass);
-              }
-              datas = cdatas;
-            }
-            type.push(datas);
+            const datas = {
+              label: data[i].name,
+              value: data[i].uid,
+            };
+            menus.push(datas);
           }
         }
-        menus = [].concat(...type);
         yield put({
           type: 'updateState',
           payload: {
@@ -297,8 +280,8 @@ export default {
       const { otype, ids } = payload;
       const data = yield call(adminRoleEdit, { id: ids });
       if (data.statusCode === 200) {
-        const { id, account, name, roleName, roleUid, state } = data.user;
-        const curItem = { id, account, name, roleName, roleUid, state };
+        const { id, name, hasMenus } = data;
+        const curItem = { id, name, hasMenus };
         yield put({
           type: 'showModal',
           payload: {
@@ -314,9 +297,7 @@ export default {
     * saveRoleData({ payload }, { select, call, put }) {
       // 获取id
       const id = yield select(({ user }) => user.curItem.id);
-      // 获取创建人
-      const lastUpdateName = Storage.getStorage('USERINFO').info.name;
-      const newSer = { ...payload, id, lastUpdateName };
+      const newSer = { ...payload, id };
       const data = yield call(adminRoleSave, newSer);
       if (data.statusCode === 200) {
         yield put({ type: 'hideModal' });
@@ -444,8 +425,8 @@ export default {
       const { otype, ids } = payload;
       const data = yield call(adminMenuEdit, { id: ids });
       if (data.statusCode === 200) {
-        const { id, name, uid, parentUid } = data.detail;
-        const curItem = { id, name, uid, parentUid };
+        const { id, name, uid, parentUid, icon, router, mpid } = data.detail;
+        const curItem = { id, name, uid, parentUid, icon, router, mpid };
         yield put({
           type: 'showModal',
           payload: {
@@ -461,9 +442,11 @@ export default {
     * saveMenuData({ payload }, { select, call, put }) {
       // 获取id
       const id = yield select(({ user }) => user.curItem.id);
-      const data = yield call(adminMenuSave, payload);
+      const newSer = { ...payload, id };
+      const data = yield call(adminMenuSave, newSer);
       if (data.statusCode === 200) {
         yield put({ type: 'hideModal' });
+        yield put({ type: 'queryMenuPType' });
         // 设置初始参数
         let queryPage = queryURL('page'), pages;
         let queryPageSize = queryURL('pageSize'), pagesizes;
@@ -489,6 +472,7 @@ export default {
     * deleteMenuData({ payload }, { call, put }) {
       const data = yield call(adminMenuDelete, { data: payload });
       if (data.statusCode === 200) {
+        yield put({ type: 'queryMenuPType' });
         // 设置初始参数
         let queryPage = queryURL('page'), pages;
         let queryPageSize = queryURL('pageSize'), pagesizes;
@@ -514,6 +498,7 @@ export default {
       const data = yield call(adminMenuAdd, payload);
       if (data.statusCode === 200) {
         yield put({ type: 'hideModal' });
+        yield put({ type: 'queryMenuPType' });
         // 设置初始参数
         let queryPage = queryURL('page'), pages;
         let queryPageSize = queryURL('pageSize'), pagesizes;

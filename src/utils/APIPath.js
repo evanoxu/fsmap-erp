@@ -164,6 +164,7 @@ let API = {
   // 8.用户管理
   login: 'system/user/adminLogin',
   logout: 'newuser/logout',
+  userMenus: 'system/user/adminGetMenuByAcc',
   //    用户管理接口
   userCheck: 'system/user/adminCheckAcc',
   userCheckName: 'system/user/adminCheckName',

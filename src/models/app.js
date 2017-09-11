@@ -1,5 +1,5 @@
 /* global window */
-import { logout } from '../services/app';
+import { logout, userMenus } from '../services/app';
 import { Storage, Config } from '../utils';
 import { routerRedux } from 'dva/router';
 
@@ -36,13 +36,17 @@ export default {
     * check({ payload }, { put }) {
       const users = Storage.getStorage('USERINFO');
       if (users !== null) {
-        let menu = Config.menus;
-        let user = users;
+        const user = users;
         yield put({
           type: 'updateState',
           payload: {
             user,
-            menu,
+          },
+        });
+        yield put({
+          type: 'selectMenus',
+          payload: {
+            account: user.info.account,
           },
         });
         // 判断访问页面 如果是'/'，跳转。
@@ -54,6 +58,48 @@ export default {
       } else if (Config.openPages && Config.openPages.indexOf(location.pathname) < 0) {
         let from = location.pathname;
         window.location = `${location.origin}/login?from=${from}`;
+      }
+    },
+    // 根据用户名获取菜单
+    * selectMenus({ payload }, { call, put }) {
+      const data = yield call(userMenus, payload);
+      if (data.statusCode === 200) {
+        const { menus } = data;
+        const menu = menus.map((m) => {
+          if (!m.parentUid) {
+            return {
+              id: m.id,
+              icon: m.icon,
+              name: m.menuName,
+            };
+          } else {
+            if (m.mpid === 1) {
+              return {
+                id: m.id,
+                bpid: m.parentUid,
+                mpid: m.parentUid,
+                icon: m.icon,
+                name: m.menuName,
+                router: m.router,
+              };
+            } else {
+              return {
+                id: m.id,
+                bpid: m.parentUid,
+                mpid: m.mpid,
+                icon: m.icon,
+                name: m.menuName,
+                router: m.router,
+              };
+            }
+          }
+        });
+        yield put({
+          type: 'updateState',
+          payload: {
+            menu,
+          },
+        });
       }
     },
     // 退出登录

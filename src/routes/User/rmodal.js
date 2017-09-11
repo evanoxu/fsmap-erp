@@ -26,9 +26,6 @@ const Modals = ({
   ...modalProps
 }) => {
 
-  // const menu = menuSet(item.menuUid);
-  // console.log(menus);
-
   // 提交按钮
   const handleOk = () => {
     validateFields((errors) => {
@@ -49,6 +46,14 @@ const Modals = ({
     onOk: handleOk,
   };
 
+  // 设置菜单类型
+  const quenet = [];
+  if (item.hasMenus && item.hasMenus.length > 0) {
+    for (let i = 0, len = item.hasMenus.length; i < len; i++) {
+      quenet.push(item.hasMenus[i].uid);
+    }
+  }
+
   return (
     <Modal {...modalOpts}>
       <Form layout="horizontal">
@@ -64,6 +69,7 @@ const Modals = ({
         </FormItem>
         <FormItem label="菜单类型" {...formItemLayout}>
           {getFieldDecorator('roles', {
+            initialValue: quenet,
             rules: [
               {
                 required: true,

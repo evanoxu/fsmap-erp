@@ -144,8 +144,8 @@ const userManage = ({ user, dispatch, location, loading }) => {
       width: 140,
     }, {
       title: '更新时间',
-      dataIndex: 'lastUpdateDate',
-      key: 'lastUpdateDate',
+      dataIndex: 'lastUpdateTime',
+      key: 'lastUpdateTime',
       width: 140,
     }, {
       title: '操作',

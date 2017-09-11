@@ -13,7 +13,6 @@ export default {
     }, { put, call }) {
       yield put({ type: 'showLoginLoading' });
       const data = yield call(login, payload);
-      console.log(data);
       yield put({ type: 'hideLoginLoading' });
       if (data.statusCode === 200) {
         const token = new Date().getTime() + 24*60*60*1000;

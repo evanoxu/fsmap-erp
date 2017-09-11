@@ -123,10 +123,18 @@ const userRole = ({ user, dispatch, location, loading }) => {
       title: '角色名',
       dataIndex: 'name',
       key: 'name',
+      width: 100,
+    }, {
+      title: '菜单权限',
+      key: 'menus',
+      render: (text, { menus }) => (
+        <span>{ menus && menus.map(function (m) { return m.name + ', '; }) }</span>
+      ),
     }, {
       title: '创建时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
+      dataIndex: 'createdTime',
+      key: 'createdTime',
+      width: 140,
     }, {
       title: '操作',
       width: 140,
