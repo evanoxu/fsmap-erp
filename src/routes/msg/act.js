@@ -14,12 +14,16 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
   const { list, pageInfo, editInfo, modalVisible } = msg;
   const { pathname } = location;
 
+  var type = '1'
+  if(location.pathname=='/msg/login-act') type = '2'
+
   // 删除按钮
   const handleClick = (id) => {
     dispatch({
       type: 'msg/actDelete',
       payload: {
-        uid:id,
+        id,
+        type,
         account:app.user.info.account
       },
     })
@@ -129,13 +133,12 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
     okText: '提交',
     wrapClassName: 'vertical-center-modal',
     onOk(data) {
-      console.log(data)
-      return false;
       dispatch({
         type: 'msg/actSave',
         payload: {
-          uid:id,
-          account:app.user.info.account
+          ...data,
+          type,
+          createName:app.user.info.name
         },
       })
     },

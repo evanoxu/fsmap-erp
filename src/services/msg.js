@@ -26,6 +26,15 @@ export async function msgDelete(data) {
 }
 
 
+export async function msgSend(data) {
+  return Fetch.default({
+    method: 'POST',
+    url: APIPath.MSGSEND,
+    data: data,
+  });
+}
+
+
 
 
 export async function actList(data) {

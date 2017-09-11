@@ -86,6 +86,14 @@ import { Fetch, APIPath } from '../utils';
     });
   }
 
+  export async function evaUsermenus(data) {
+    return Fetch.default({
+      method: 'GET',
+      url: APIPath.EVAUSERMENUS,
+    });
+  }
+
+
 
   // evaProbList: 'type/mapProblemList',
   // evaProbEdit: 'type/mapProblemEdit',

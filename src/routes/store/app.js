@@ -16,18 +16,26 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
   var mapType = '1'
   if(location.pathname=='/store/needs') mapType = '2'
 
-
-
-  // 删除按钮
-  const handleClick = (type,id) => {
+  // 上下架按钮
+  const handleClick = (UDtype,id) => {
     dispatch({
       type: 'store/storeUpDown',
       payload: {
-        type,id,account:app.user.info.account
+        type:mapType,id,UDtype,account:app.user.info.account
       },
     })
   }
 
+  //  删除按钮
+  const handleDelete = (id) => {
+    dispatch({
+      type: 'store/storeNeedsDelete',
+      payload: {
+        id,account:app.user.info.account
+      },
+    })
+  }
+  
 
   // 设置页面数据
   const getBodyWrapperProps = {
@@ -109,15 +117,15 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
         render: (text,{state,id}) => (
           <div>
             {
-              state
+              state==1
               ?  
-              <Popconfirm title="确定上架吗?" onConfirm={handleClick.bind(null, '1',id)}>
-                <Button type="primary">上架</Button>
-              </Popconfirm>
-              :
               <Popconfirm title="确定下架吗?" onConfirm={handleClick.bind(null, '2',id)}>
                 <Button type="danger">下架</Button>
               </Popconfirm>
+              :
+              <Popconfirm title="确定上架吗?" onConfirm={handleClick.bind(null, '1',id)}>
+                <Button type="primary">上架</Button>
+              </Popconfirm>              
             }
           </div>  
         ),
@@ -165,9 +173,12 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
       {
         title: '操作',
         key: 'operation',
-        render: (text,{uid}) => (
+        render: (text,{id,uid}) => (
           <div>
             <Link to={`/store/needs/${uid}`}>查看回帖</Link>
+            <Popconfirm title="确定删除吗?" onConfirm={handleDelete.bind(null, id)}>
+              <Button type="danger" style={{ margin: '0 2px' }}>删除</Button>
+            </Popconfirm>            
           </div>  
         ),
         width:'20%'

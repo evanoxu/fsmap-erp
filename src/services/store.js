@@ -12,7 +12,7 @@ export async function storeList(data) {
 export async function storeUpDown(data) {
   return Fetch.default({
     method: 'POST',
-    url: APIPath.STOREUPDOWN+data.id+'/'+data.type,
+    url: APIPath.STOREUPDOWN+data.id+'/'+data.UDtype,
     data: data
   });
 }

@@ -24,6 +24,7 @@ export default {
             var currentPage, pageSize
             currentPage = Number(query.page || 1);
             pageSize = Number(query.pageSize || 10);
+
             dispatch({
               type: 'queryList',
               payload: {
@@ -88,13 +89,21 @@ export default {
     * msgSave({ payload }, { call, put }) {
       const data = yield call(services.msgSave, payload);
       if (data.statusCode === 200) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            modalVisible:false,
+            editInfo:null
+          },
+        });         
         var currentPage, pageSize, keys;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL(keys) || '';
         yield put({
           type: 'queryList',
           payload: {
-            currentPage,pageSize
+            currentPage,pageSize,key:keys
           },
         });
       } else {
@@ -102,16 +111,38 @@ export default {
       }
     },
 
+
+
+    * msgSend({ payload }, { call, put }) {
+      const data = yield call(services.msgSend, payload);
+      if (data.statusCode === 200) {
+        var currentPage, pageSize, keys;
+        currentPage = Number(queryURL('page') || 1)
+        pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL(keys) || '';
+        yield put({
+          type: 'queryList',
+          payload: {
+            currentPage,pageSize,key:keys
+          },
+        });
+      } else {
+        throw data.statusMsg;
+      }
+    },
+
+
     * msgDelete({ payload }, { call, put }) {
       const data = yield call(services.msgDelete, payload);
       if (data.statusCode === 200) {
         var currentPage, pageSize, keys;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL(keys) || '';
         yield put({
           type: 'queryList',
           payload: {
-            currentPage,pageSize
+            currentPage,pageSize,key:keys
           },
         });
       } else {
@@ -149,13 +180,21 @@ export default {
     * actSave({ payload }, { call, put }) {
       const data = yield call(services.actSave, payload);
       if (data.statusCode === 200) {
-        var currentPage, pageSize, keys;
+        yield put({
+          type: 'updateState',
+          payload: {
+            modalVisible:false,
+            editInfo:null
+          },
+        });         
+        var currentPage, pageSize, keys,type = payload.type;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL(keys) || '';
         yield put({
           type: 'actList',
           payload: {
-            currentPage,pageSize
+            currentPage,pageSize,type,key:keys
           },
         });
       } else {
@@ -166,13 +205,14 @@ export default {
     * actDelete({ payload }, { call, put }) {
       const data = yield call(services.actDelete, payload);
       if (data.statusCode === 200) {
-        var currentPage, pageSize, keys;
+        var currentPage, pageSize, keys,type = payload.type;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL(keys) || '';
         yield put({
           type: 'actList',
           payload: {
-            currentPage,pageSize
+            currentPage,pageSize,type,key:keys
           },
         });
       } else {

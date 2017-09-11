@@ -21,6 +21,10 @@ export default {
     //用户权限
     authlist:[],
     authpageInfo:{ current: 1, pageSize: 10, total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
+    uper: [],
+    menus: [],
+    menusId: [],
+    open: []
   },
 
   subscriptions: {
@@ -51,6 +55,12 @@ export default {
             });          
           break;  
           case '/evaluate/auth':
+            dispatch({
+              type: 'evaUserTop',
+            });  
+            dispatch({
+              type: 'evaUsermenus',
+            });                    
             var currentPage, pageSize;
             currentPage = Number(query.page) || 1;
             pageSize = Number(query.pageSize) || 10;
@@ -123,7 +133,6 @@ export default {
 
     * evaDelete({ payload }, { call, put }) {
       const data = yield call(services.evaDelete, payload);
-      console
       if (data.statusCode === 200) {
         var currentPage, pageSize,mapType=payload.mapType;
         currentPage = Number(queryURL('page') || 1)
@@ -227,6 +236,79 @@ export default {
             currentPage,pageSize
           },
         }); 
+      } else {
+        throw data.statusMsg;
+      }
+    },
+
+    
+    * evaUserTop({}, { call, put }) {
+      const data = yield call(services.evaUserTop);
+      if (data.statusCode === 200) {
+        const { list } = data;
+        yield put({
+          type: 'updateState',
+          payload: {
+            uper:list
+          },
+        });
+      } else {
+        throw data.statusMsg;
+      }
+    },
+
+    * evaUsermenus({}, { call, put }) {
+      const data = yield call(services.evaUsermenus);
+      if (data.statusCode === 200) {
+        const { ditu,gonggong } = data;
+        var menus = []
+        var menusId = {}
+        var map = [];
+        var open = [];
+        const loop = data => data.map((item) => {
+          map.push({
+            name: item.typeName,
+            id : item.id
+          })
+          menusId[item.id] = item.typeName
+        });
+        loop(ditu)
+
+        menus[0] = {
+          typeName: '宽带地图',
+          id : '-1',
+          childList: ditu
+        }
+        open.push('-1')
+
+        var pub = []
+        const looppub = data => data.map((item,i) => {
+          if (item.childList&&item.childList.length) {
+            looppub(item.childList)
+            open.push(String(item.id))
+          }else{
+            menusId[item.id] = item.typeName||item.subTypeName
+          }
+        });
+
+        looppub(gonggong)
+
+        menus[1] = {
+          typeName: '公共服务评价',
+          id : '-2',
+          childList: gonggong
+        }
+
+        open.push('-2')
+
+        yield put({
+          type: 'updateState',
+          payload: {
+            menus:menus,
+            menusId:menusId,
+            open:open,
+          },
+        });
       } else {
         throw data.statusMsg;
       }

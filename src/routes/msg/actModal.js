@@ -11,10 +11,10 @@ const Option = Select.Option;
 
 const formItemLayout = {
   labelCol: {
-    span: 6,
+    span: 4,
   },
   wrapperCol: {
-    span: 16,
+    span: 18,
   },
 };
 
@@ -30,30 +30,18 @@ const Modals = ({
   ...modalProps
 }) => {
   var init = {
-    account: '',
-    password: '',
-    name: '',
-    telphone: '',
-    state: '0',
-    isUperManage: false,
-    uperManageAccount: '',
-    menus: '',
-    hasMyMap: false,
+    id: '',
+    imgUrl: '',
+    linkUrl: '',
   }  
   if(editInfo){
     init = {
-      account: editInfo.account,
-      password: editInfo.password,
-      name: editInfo.name,
-      telphone: editInfo.telphone,
-      state: editInfo.state,
-      isUperManage: Number(editInfo.isUperManage)?true:false,
-      uperManageAccount: editInfo.uperManageAccount,
-      menus: editInfo.menus,
-      hasMyMap: Number(editInfo.hasMyMap)?true:false,
+      id:editInfo.id,
+      imgUrl: editInfo.imgUrl,
+      linkUrl: editInfo.linkUrl,
     }    
   }  
-  // console.log(init);
+  
   // 提交按钮
   const handleOk = () => {
     validateFields((errors) => {
@@ -63,12 +51,42 @@ const Modals = ({
       var  data = {
         ...getFieldsValue(),
       };
-      data.isUperManage = data.isUperManage?1:0;
-      data.hasMyMap = data.hasMyMap?1:0;
       if(init.id)  data.id = init.id
       onOk(data);
     });
   };
+
+  // 宽带专题图标
+  const deType = getFieldsValue();
+  const deTypePic = deType['imgUrl'];
+
+  const propss = {
+    action: APIPath.ACTUPLOAD,
+    showUploadList: false,
+  };
+  // 宽带专题图标上传回调数据
+  const handlePicChange = (type, info) => {
+    let filesList = info.file;
+    if (filesList.status == 'done') {
+      const { data } = filesList.response;
+      if (type == 'imgUrl') {
+        const fields = getFieldsValue();
+        fields['imgUrl'] = data;
+        setFieldsValue(fields);
+      }
+    }
+  };
+
+  // 上传检测
+  const handlePicUpload = (file) => {
+    const isType = file.type;
+    if (isType == '') {
+      message.error('上传文件格式有误，请重新选择');
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   // 封装父层数据
   const modalOpts = {
@@ -80,9 +98,30 @@ const Modals = ({
   return (
     <Modal {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="用户名" {...formItemLayout}>
-          {getFieldDecorator('account', {
-            initialValue: init.account,
+        <FormItem label="图片" {...formItemLayout}>
+            <Row>
+              <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px'}}>
+                <img width="20" height="20" src={deTypePic} />
+              </Col>
+              <Col span={20}>
+                <Upload {...propss} onChange={handlePicChange.bind(null, 'imgUrl')} beforeUpload={handlePicUpload}>
+                  {getFieldDecorator('imgUrl', {
+                    initialValue: init.imgUrl,
+                    rules: [
+                      {
+                        required: true,
+                      },
+                    ],
+                  })(
+                  <Input size="large" placeholder="点击选择新图片" disabled />
+                  )}
+                </Upload>
+              </Col>
+            </Row>
+        </FormItem>        
+        <FormItem label="链接" {...formItemLayout}>
+          {getFieldDecorator('linkUrl', {
+            initialValue: init.linkUrl,
             rules: [
               {
                 required: true,
@@ -90,69 +129,6 @@ const Modals = ({
             ],
           })(<Input />)}
         </FormItem>
-        <FormItem label="新密码" {...formItemLayout}>
-          {getFieldDecorator('password', {
-            initialValue: '',
-          })(<Input />)}
-        </FormItem>
-        <FormItem label="昵称" {...formItemLayout}>
-          {getFieldDecorator('name', {
-            initialValue: init.name,
-            rules: [
-              {
-                required: true,
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
-        <FormItem label="电话" {...formItemLayout}>
-          {getFieldDecorator('telphone', {
-            initialValue: init.telphone,
-            rules: [
-              {
-                required: true,
-              },
-            ],
-          })(<Input />)}
-        </FormItem>                              
-        <FormItem label="账号状态" {...formItemLayout}>
-          {getFieldDecorator('state', {
-            initialValue: String(init.state),
-            rules: [
-              {
-                required: true,
-              },
-            ],
-          })(
-          <Select
-            >
-              <Option value="0">可用</Option>
-              <Option value="1">不可用</Option>
-            </Select>
-          )}
-        </FormItem>       
-        <FormItem
-          {...formItemLayout}
-          label="是否为主管部门"
-        >
-          {getFieldDecorator('isUperManage', {
-            initialValue: init.isUperManage,
-            valuePropName: 'checked' 
-          })(
-            <Switch />
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="自定义地图权限"
-        >
-          {getFieldDecorator('hasMyMap', {
-            initialValue: init.hasMyMap,
-            valuePropName: 'checked' 
-          })(
-            <Switch />
-          )}          
-        </FormItem>   
       </Form>
     </Modal>
   )

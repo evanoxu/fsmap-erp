@@ -141,17 +141,17 @@ export default {
     },
 
 
-    * storeNeedsDelete({ storeNeedsDelete }, { call, put }) {
-      const data = yield call(services.storeUpDown, payload);
+    * storeNeedsDelete({ payload }, { call, put }) {
+      const data = yield call(services.storeNeedsDelete, payload);
       if (data.statusCode === 200) {
-        var currentPage, pageSize, keys;
+        var currentPage, pageSize, keys, type = 2;;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
         keys = queryURL(keys) || '';
         yield put({
           type: 'queryList',
           payload: {
-            currentPage,pageSize,key:keys
+            currentPage,pageSize,type,key:keys
           },
         });
       } else {

@@ -25,6 +25,19 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
     })
   }
 
+  // 删除按钮
+  const handleSend = (id) => {
+    console.log(id)
+    return false;
+    dispatch({
+      type: 'msg/msgSend',
+      payload: {
+        id:id,
+        account:app.user.info.account
+      },
+    })
+  }
+
 
   // 打开弹窗 
   const handleSave = () => {
@@ -56,7 +69,7 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
       width:'5%'
     },
     {
-      title: '类型',
+      title: '标题',
       dataIndex: 'title',
       width:'10%'
     },
@@ -78,12 +91,12 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
     {
       title: '操作',
       key: 'operation',
-      render: (text,{state,id}) => (
+      render: (text,{uid,id}) => (
         <div>
-            <Popconfirm title="确定发送吗?" onConfirm={handleClick.bind(null, id)}>
+            <Popconfirm title="确定发送吗?" onConfirm={handleSend.bind(null, id)}>
               <Button type="primary" style={{ margin: '0 2px' }}>发送</Button>
             </Popconfirm>
-            <Popconfirm title="确定删除吗?" onConfirm={handleClick.bind(null, id)}>
+            <Popconfirm title="确定删除吗?" onConfirm={handleClick.bind(null, uid)}>
               <Button type="danger" style={{ margin: '0 2px' }}>删除</Button>
             </Popconfirm>
         </div>  
@@ -101,13 +114,11 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
     okText: '提交',
     wrapClassName: 'vertical-center-modal',
     onOk(data) {
-      console.log(data)
-      return false;
       dispatch({
         type: 'msg/msgSave',
         payload: {
-          uid:id,
-          account:app.user.info.account
+          ...data,
+          createName:app.user.info.name
         },
       })
     },

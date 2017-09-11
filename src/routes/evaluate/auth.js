@@ -15,9 +15,8 @@ const mapType = {
 }
 
 const MapManage = ({ app, evaluate,dispatch, location, loading }) => {
-  const { authlist, authpageInfo, editInfo, modalVisible } = evaluate;
+  const { authlist, authpageInfo, editInfo, modalVisible, uper, menus,open} = evaluate;
   const { pathname } = location;
-
   // 编辑按钮
   const handleEditClick = (obj) => {
     if(obj){
@@ -51,6 +50,9 @@ const MapManage = ({ app, evaluate,dispatch, location, loading }) => {
 
   // 显示弹窗数据
   const modalProps = {
+    open,
+    uper,
+    menus,
     editInfo,
     visible: modalVisible,
     confirmLoading: loading.effects['evaluate/evaUserSave'],
@@ -139,7 +141,7 @@ const MapManage = ({ app, evaluate,dispatch, location, loading }) => {
     },  
     {
       title: '用户权限',
-      dataIndex: 'gender',
+      dataIndex: 'menus',
       width:'10%'
     },      
     {

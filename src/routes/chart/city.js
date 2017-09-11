@@ -73,15 +73,15 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
       render: (text,{state,id}) => (
         <div>
           {
-            state
+            state==1
             ?  
-            <Popconfirm title="确定上架吗?" onConfirm={handleClick.bind(null, '1',id)}>
-              <Button type="primary">上架</Button>
-            </Popconfirm>
-            :
             <Popconfirm title="确定下架吗?" onConfirm={handleClick.bind(null, '2',id)}>
               <Button type="danger">下架</Button>
             </Popconfirm>
+            :
+            <Popconfirm title="确定上架吗?" onConfirm={handleClick.bind(null, '1',id)}>
+              <Button type="primary">上架</Button>
+            </Popconfirm>              
           }
         </div>  
       ),
