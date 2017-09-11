@@ -48,14 +48,14 @@ export default {
         } 
 
         if (match) {
-          var currentPage, pageSize, keys;
+          var currentPage, pageSize, keys, uid = match[1], type = 2;
           currentPage = Number(query.page || 1);
           pageSize = Number(query.pageSize || 10);
           keys = query.keys || '';
           dispatch({
             type: 'storeNeedsList',
             payload: {
-              currentPage,pageSize,key:keys
+              currentPage,pageSize,type,uid,key:keys
             },
           }); 
         } 
@@ -121,7 +121,9 @@ export default {
       });      
       const data = yield call(services.storeNeedsList, payload);
       if (data.statusCode === 200) {
-        const { list, pageInfo } = data;
+
+        const { communicate } = data;
+        const { list, pageInfo } = communicate;
         yield put({
           type: 'updateState',
           payload: {

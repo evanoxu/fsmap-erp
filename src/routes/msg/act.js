@@ -7,13 +7,12 @@ import { Tabs, Table, Button, Popconfirm } from 'antd';
 import { classnames } from '../../utils';
 import AnimTableBody from '../../components/DataTable/AnimTableBody';
 // import styles from './list.less';
-// import Filter from './filter';
+import Filter from './filter';
+import Modal from './actModal';
 
 const MapManage = ({ app, msg ,dispatch, location, loading }) => {
   const { list, pageInfo, editInfo, modalVisible } = msg;
   const { pathname } = location;
-
-  const loadingList = loading.effects['msg/actList']
 
   // 删除按钮
   const handleClick = (id) => {
@@ -24,6 +23,27 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
         account:app.user.info.account
       },
     })
+  }
+
+  // 打开弹窗 
+  const handleSave = (obj) => {
+    if(obj){
+      dispatch({
+        type: 'msg/updateState',
+        payload: {
+          editInfo:obj,
+          modalVisible:true
+        },
+      }); 
+    }else{
+      dispatch({
+        type: 'msg/updateState',
+        payload: {
+          editInfo:null,
+          modalVisible:true
+        },
+      });      
+    }
   }
 
 
@@ -43,73 +63,137 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
     {
       title: 'ID',
       dataIndex: 'id',
-      width:'10%'
+      width:'5%'
     },
     {
-      title: 'banner',
-      dataIndex: 'account',
-      width:'20%'
+      title: '图片',
+      dataIndex: 'imgUrl',
+      width:'20%',
+      render: (text) => (
+        <div>
+          <img src={`${text}`}/>
+        </div>  
+      ),       
     },
     {
-      title: '状态',
-      dataIndex: 'name',
-      width:'10%'
-    },
-    {
-      title: '文件',
-      dataIndex: 'telphone',
-      width:'10%'
-    },                     
+      title: '图片URL',
+      dataIndex: 'linkUrl',
+      width:'10%',
+      render: (text) => (
+        <div>
+          <a target="_blank" href={`${text}`}>{text}</a>
+        </div>  
+      ),       
+    },          
     {
       title: '创建者',
-      dataIndex: 'uperManageAccount',
+      dataIndex: 'createName',
       width:'10%'
     },  
     {
       title: '创建时间',
       dataIndex: 'createDate',
       width:'10%'
-    },                
+    },               
+    {
+      title: '更新者',
+      dataIndex: 'lastUpdateName',
+      width:'10%'
+    },  
+    {
+      title: '更新时间',
+      dataIndex: 'lastUpdateDate',
+      width:'10%'
+    },                 
     {
       title: '操作',
       key: 'operation',
-      render: (text,{state,id}) => (
+      render: (text,obj) => (
         <div>
- 
-            <Popconfirm title="确定删除吗?" onConfirm={handleClick.bind(null, id)}>
-              <Button type="danger">删除</Button>
+            <Button type="primary" style={{ margin: '0 2px' }} onClick={handleSave.bind(null, obj)}>编辑</Button>
+            <Popconfirm title="确定删除吗?" onConfirm={handleClick.bind(null, obj.id)}>
+              <Button type="danger" style={{ margin: '0 2px' }}>删除</Button>
             </Popconfirm>
-        </div>  
+        </div>
       ),
       width:'20%'
     },
   ]; 
 
-  // 查询数据
-  // const filterProps = {
-  //   filter: {
-  //     ...location.query,
-  //   },
-  //   onFilterChange(value) {
-  //     const { query, pathname } = location;
-  //     dispatch(routerRedux.push({
-  //       pathname,
-  //       query: {
-  //         ...value,
-  //         page: 1,
-  //         pageSize: query.pageSize,
-  //       },
-  //     }));
-  //   },
-  // };
+  // 显示弹窗数据
+  const modalProps = {
+    editInfo,
+    visible: modalVisible,
+    confirmLoading: loading.effects['msg/actSave'],
+    title: `${!editInfo? '新增' : '编辑'}`,
+    okText: '提交',
+    wrapClassName: 'vertical-center-modal',
+    onOk(data) {
+      console.log(data)
+      return false;
+      dispatch({
+        type: 'msg/actSave',
+        payload: {
+          uid:id,
+          account:app.user.info.account
+        },
+      })
+    },
+    onCancel() {
+      dispatch({
+        type: 'msg/updateState',
+        payload: {
+          modalVisible:false
+        },
+      }); 
+    },
+  };
+
+  //查询数据
+  const filterProps = {
+    filter: {
+      ...location.query,
+    },
+    onFilterChange(value) {
+      const { query, pathname } = location;
+      dispatch(routerRedux.push({
+        pathname,
+        query: {
+          ...value,
+          page: 1,
+          pageSize: query.pageSize,
+        },
+      }));
+    },
+    onAdd() {
+      handleSave()
+    },    
+  };
+
+  const tableProps = {
+    dataSource: list,
+    columns,
+    loading: loading.effects['msg/actList'],
+    pagination: pageInfo,
+    onChange(page) {
+      const { query, pathname } = location;
+      dispatch(routerRedux.push({
+        pathname,
+        query: {
+          ...query,
+          page: page.current,
+          pageSize: page.pageSize,
+        },
+      }));
+    },
+  };
 
   return (
     <div className="content-inner">  
+      {modalVisible && <Modal {...modalProps} />}    
+      <Filter {...filterProps}/>
       <Table
-        pagination={pageInfo}
-        loading={loadingList}
-        columns={columns}
-        dataSource={list}
+        { ...tableProps }
         rowKey={record => record.id}
         getBodyWrapper={getBodyWrapper}
       /> 

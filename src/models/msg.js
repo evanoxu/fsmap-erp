@@ -31,17 +31,28 @@ export default {
               },
             });          
           break;
-          case '/msg/act':
-            var currentPage, pageSize
+          case '/msg/login-act':
+            var currentPage, pageSize, type = 2
             currentPage = Number(query.page || 1);
             pageSize = Number(query.pageSize || 10);
             dispatch({
               type: 'actList',
               payload: {
-                currentPage,pageSize
+                currentPage,pageSize,type
               },
             });          
-          break;                          
+          break;   
+          case '/msg/store-act':
+            var currentPage, pageSize, type = 1
+            currentPage = Number(query.page || 1);
+            pageSize = Number(query.pageSize || 10);
+            dispatch({
+              type: 'actList',
+              payload: {
+                currentPage,pageSize,type
+              },
+            });          
+          break;                                 
         }        
       })
     },

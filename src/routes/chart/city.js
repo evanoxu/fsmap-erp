@@ -13,8 +13,6 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
   const { list, pageInfo, editInfo, modalVisible } = chart;
   const { pathname } = location;
 
-  const loadingList = loading.effects['chart/queryList']
-
   // 删除按钮
   const handleClick = (type,id) => {
     dispatch({
@@ -42,32 +40,32 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
     {
       title: 'ID',
       dataIndex: 'id',
-      width:'10%'
+      width:'5%'
     },
     {
       title: '标题',
-      dataIndex: 'account',
+      dataIndex: 'name',
       width:'20%'
     },
     {
-      title: '状态',
-      dataIndex: 'name',
-      width:'10%'
-    },
-    {
       title: '文件',
-      dataIndex: 'telphone',
-      width:'10%'
+      dataIndex: 'imgUrl',
+      width:'20%',
+      render: (text) => (
+        <div>
+          <img src={`${text}`}/>
+        </div>  
+      ),        
     },                     
     {
       title: '创建者',
-      dataIndex: 'uperManageAccount',
+      dataIndex: 'createName',
       width:'10%'
     },  
     {
       title: '创建时间',
       dataIndex: 'createDate',
-      width:'10%'
+      width:'20%'
     },                
     {
       title: '操作',
@@ -78,7 +76,7 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
             state
             ?  
             <Popconfirm title="确定上架吗?" onConfirm={handleClick.bind(null, '1',id)}>
-              <Button type="danger">上架</Button>
+              <Button type="primary">上架</Button>
             </Popconfirm>
             :
             <Popconfirm title="确定下架吗?" onConfirm={handleClick.bind(null, '2',id)}>
@@ -87,9 +85,27 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
           }
         </div>  
       ),
-      width:'20%'
+      width:'10%'
     },
   ]; 
+
+  const tableProps = {
+    dataSource: list,
+    columns,
+    loading: loading.effects['chart/queryList'],
+    pagination: pageInfo,
+    onChange(page) {
+      const { query, pathname } = location;
+      dispatch(routerRedux.push({
+        pathname,
+        query: {
+          ...query,
+          page: page.current,
+          pageSize: page.pageSize,
+        },
+      }));
+    },
+  };
 
   // 查询数据
   const filterProps = {
@@ -98,7 +114,6 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
     },
     onFilterChange(value) {
       const { query, pathname } = location;
-      console.log(value)
       dispatch(routerRedux.push({
         pathname,
         query: {
@@ -114,10 +129,7 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
     <div className="content-inner">  
       <Filter {...filterProps} />
       <Table
-        pagination={pageInfo}
-        loading={loadingList}
-        columns={columns}
-        dataSource={list}
+        { ...tableProps }
         rowKey={record => record.id}
         getBodyWrapper={getBodyWrapper}
       /> 

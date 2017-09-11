@@ -25,7 +25,7 @@ export default {
             var currentPage, pageSize, keys;
             currentPage = Number(query.page || 1);
             pageSize = Number(query.pageSize || 10);
-            keys = query.pageSize || '';
+            keys = query.keys || '';
             dispatch({
               type: 'queryList',
               payload: {

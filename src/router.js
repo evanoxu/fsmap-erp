@@ -259,14 +259,23 @@ const Routers = ({ history, app }) => {
 
         // 7.消息管理
         {
-          path: 'msg/act',
+          path: 'msg/login-act',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
               registerModel(app, require('./models/msg'));
               cb(null, require('./routes/msg/act'));
             }, 'msg/act');
           },
-        },        
+        },
+        {
+          path: 'msg/store-act',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/msg'));
+              cb(null, require('./routes/msg/act'));
+            }, 'msg/act');
+          },
+        },                 
         {
           path: 'msg/admin',
           getComponent(nextState, cb) {

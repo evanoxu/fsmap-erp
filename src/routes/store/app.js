@@ -16,7 +16,7 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
   var mapType = '1'
   if(location.pathname=='/store/needs') mapType = '2'
 
-  const loadingList = loading.effects['store/queryList']
+
 
   // 删除按钮
   const handleClick = (type,id) => {
@@ -50,32 +50,42 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
       },
       {
         title: '应用/网站名',
-        dataIndex: 'account',
+        dataIndex: 'appName',
         width:'10%'
       },
       {
         title: '应用/网站图标',
-        dataIndex: 'name',
-        width:'10%'
+        dataIndex: 'appPic',
+        width:'10%',
+        render: (text) => (
+          <div>
+            <img src={`${text}`}/>
+          </div>  
+        ),        
       },
       {
         title: '截图',
-        dataIndex: 'telphone',
+        dataIndex: 'appImgsList',
         width:'10%'
       },
       {
         title: '简介',
-        dataIndex: 'state',
+        dataIndex: 'appIntroduce',
         width:'10%',      
       },
       {
         title: '链接',
-        dataIndex: 'isUperManage',
+        dataIndex: 'appUrl',
         width:'10%',
+        render: (text) => (
+          <div>
+            <a target="_blank" href={`${text}`}>{text}</a>
+          </div>  
+        ),        
       },                      
       {
         title: '创建者',
-        dataIndex: 'uperManageAccount',
+        dataIndex: 'createName',
         width:'5%'
       },  
       {
@@ -85,7 +95,7 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
       }, 
       {
         title: '更新者',
-        dataIndex: 'updateAccount',
+        dataIndex: 'lastUpdateName',
         width:'5%'
       },  
       {
@@ -102,15 +112,12 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
               state
               ?  
               <Popconfirm title="确定上架吗?" onConfirm={handleClick.bind(null, '1',id)}>
-                <Button type="danger">上架</Button>
+                <Button type="primary">上架</Button>
               </Popconfirm>
               :
               <Popconfirm title="确定下架吗?" onConfirm={handleClick.bind(null, '2',id)}>
                 <Button type="danger">下架</Button>
               </Popconfirm>
-            }
-            {
-              <Link to={`/store/needs/${id}`}>查看详情</Link>
             }
           </div>  
         ),
@@ -127,47 +134,65 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
       },
       {
         title: '标题名',
-        dataIndex: 'account',
-        width:'20%'
-      },
-      {
-        title: '状态',
-        dataIndex: 'name',
+        dataIndex: 'appName',
         width:'10%'
-      },                    
+      },     
+      {
+        title: '需求说明',
+        dataIndex: 'appName2',
+        width:'20%'
+      }, 
+      {
+        title: '附件',
+        dataIndex: 'appName3',
+        width:'10%'
+      }, 
+      {
+        title: '图片',
+        dataIndex: 'appName4',
+        width:'20%'
+      },                                 
       {
         title: '创建者',
-        dataIndex: 'uperManageAccount',
+        dataIndex: 'createName',
         width:'10%'
       },  
       {
         title: '创建时间',
         dataIndex: 'createDate',
-        width:'20%'
+        width:'10%'
       },                 
       {
         title: '操作',
         key: 'operation',
-        render: (text,{state}) => (
+        render: (text,{uid}) => (
           <div>
-            {
-              state
-              ?  
-              <Popconfirm title="确定上架吗?" onConfirm={handleClick.bind(null, '1')}>
-                <Button type="danger">上架</Button>
-              </Popconfirm>
-              :
-              <Popconfirm title="确定下架吗?" onConfirm={handleClick.bind(null, '2')}>
-                <Button type="danger">下架</Button>
-              </Popconfirm>
-            }
+            <Link to={`/store/needs/${uid}`}>查看回帖</Link>
           </div>  
         ),
-        width:'30%'
+        width:'20%'
       },
     ]; 
 
   }  
+
+  const tableProps = {
+    dataSource: list,
+    columns,
+    loading: loading.effects['store/queryList'],
+    pagination: pageInfo,
+    onChange(page) {
+      const { query, pathname } = location;
+      dispatch(routerRedux.push({
+        pathname,
+        query: {
+          ...query,
+          page: page.current,
+          pageSize: page.pageSize,
+        },
+      }));
+    },
+  };
 
   // 查询数据
   const filterProps = {
@@ -191,10 +216,7 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
     <div className="content-inner">  
       <Filter {...filterProps} />
       <Table
-        pagination={pageInfo}
-        loading={loadingList}
-        columns={columns}
-        dataSource={list}
+        { ...tableProps }
         rowKey={record => record.id}
         getBodyWrapper={getBodyWrapper}
       /> 

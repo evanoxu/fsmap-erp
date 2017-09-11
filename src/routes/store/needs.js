@@ -14,19 +14,6 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
   const { pathname } = location;
 
 
-  const loadingList = loading.effects['store/storeNeedsList']
-
-  // 删除按钮
-  const handleClick = (id) => {
-    dispatch({
-      type: 'store/storeNeedsDelete',
-      payload: {
-        id,account:app.user.info.account
-      },
-    })
-  }
-
-
   // 设置页面数据
   const getBodyWrapperProps = {
     page: location.query.page,
@@ -43,39 +30,42 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
     {
       title: 'ID',
       dataIndex: 'id',
-      width:'20%'
+      width:'10%'
     },
     {
       title: '内容',
-      dataIndex: 'account',
-      width:'20%'
+      dataIndex: 'content',
+      width:'60%'
     },                   
     {
       title: '创建者',
-      dataIndex: 'uperManageAccount',
-      width:'20%'
+      dataIndex: 'createName',
+      width:'10%'
     },  
     {
       title: '创建时间',
       dataIndex: 'createDate',
       width:'20%'
-    },
-    {
-      title: '操作',
-      key: 'operation',
-      render: (text,{state,id}) => (
-        <div>
-          {
-            <Popconfirm title="确定删除吗?" onConfirm={handleClick.bind(null, id)}>
-              <Button type="danger">删除</Button>
-            </Popconfirm>
-          }
-        </div>  
-      ),
-      width:'20%'
     },    
   ]; 
  
+  const tableProps = {
+    dataSource: list,
+    columns,
+    loading: loading.effects['store/storeNeedsList'],
+    pagination: pageInfo,
+    onChange(page) {
+      const { query, pathname } = location;
+      dispatch(routerRedux.push({
+        pathname,
+        query: {
+          ...query,
+          page: page.current,
+          pageSize: page.pageSize,
+        },
+      }));
+    },
+  };
 
   // 查询数据
   const filterProps = {
@@ -99,10 +89,7 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
     <div className="content-inner">  
       <Filter {...filterProps} />
       <Table
-        pagination={pageInfo}
-        loading={loadingList}
-        columns={columns}
-        dataSource={list}
+        { ...tableProps }
         rowKey={record => record.id}
         getBodyWrapper={getBodyWrapper}
       /> 
