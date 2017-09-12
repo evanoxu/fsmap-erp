@@ -1,9 +1,10 @@
 
 
-import { queryURL, Storage } from '../utils';
+import { queryURL, Storage, Config } from '../utils';
 import { routerRedux } from 'dva/router';
-
 import * as services from '../services/evaluate';
+
+const pagepack = Config.pagepack
 
 export default {
 
@@ -12,15 +13,15 @@ export default {
   state: {
     //评价列表
     list: [],
-    pageInfo: { current: 1, pageSize: 10, total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
+    pageInfo: pagepack,
     //问题分类
     prolist:[],
-    propageInfo:{ current: 1, pageSize: 10, total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
+    propageInfo:pagepack,
     editInfo:null,
     modalVisible: false,
     //用户权限
     authlist:[],
-    authpageInfo:{ current: 1, pageSize: 10, total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
+    authpageInfo:pagepack,
     uper: [],
     menus: [],
     menusId: [],
@@ -33,24 +34,26 @@ export default {
         const { pathname, query} = location;
         switch (pathname){
           case '/evaluate/map':
-            var currentPage, pageSize,mapType='map'
+            var currentPage, pageSize, keys, mapType='map'
             currentPage = Number(query.page || 1);
             pageSize = Number(query.pageSize || 10);
+            keys = query.keys || '';
             dispatch({
               type: 'queryList',
               payload: {
-                currentPage,pageSize,mapType
+                currentPage,pageSize,mapType,key:keys
               },
             });          
           break;
           case '/evaluate/public':
-            var currentPage, pageSize,mapType='publicService'
+            var currentPage, pageSize, keys, mapType='publicService'
             currentPage = Number(query.page) || 1;
             pageSize = Number(query.pageSize) || 10;
+            keys = query.keys || '';
             dispatch({
               type: 'queryList',
               payload: {
-                currentPage,pageSize,mapType
+                currentPage,pageSize,mapType,key:keys
               },
             });          
           break;  
@@ -61,24 +64,26 @@ export default {
             dispatch({
               type: 'evaUsermenus',
             });                    
-            var currentPage, pageSize;
+            var currentPage, pageSize,keys
             currentPage = Number(query.page) || 1;
             pageSize = Number(query.pageSize) || 10;
+            keys = query.keys || '';
             dispatch({
               type: 'evaUserList',
               payload: {
-                currentPage,pageSize
+                currentPage,pageSize,key:keys
               },
             });          
           break;           
           case '/evaluate/problem':
-            var currentPage, pageSize;
+            var currentPage, pageSize,keys;
             currentPage = Number(query.page) || 1;
             pageSize = Number(query.pageSize) || 10;
+            keys = query.keys || '';
             dispatch({
               type: 'queryProList',
               payload: {
-                currentPage,pageSize
+                currentPage,pageSize,key:keys
               },
             });          
           break;                  
@@ -103,6 +108,7 @@ export default {
           payload: {
             list,
             pageInfo: {
+              ...pagepack,
               current: payload.currentPage,
               pageSize: payload.pageSize,
               total: pageInfo.totalRecords,
@@ -116,13 +122,14 @@ export default {
     * evaSetend({ payload }, { call, put }) {
       const data = yield call(services.evaSetend, payload);
       if (data.statusCode === 200) {
-        var currentPage, pageSize,mapType=payload.mapType;
+        var currentPage, pageSize,keys,mapType=payload.mapType;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL('keys') || '';
         yield put({
           type: 'queryList',
           payload: {
-            currentPage,pageSize,mapType
+            currentPage,pageSize,mapType,key:keys
           },
         });
 
@@ -134,13 +141,14 @@ export default {
     * evaDelete({ payload }, { call, put }) {
       const data = yield call(services.evaDelete, payload);
       if (data.statusCode === 200) {
-        var currentPage, pageSize,mapType=payload.mapType;
+        var currentPage, pageSize,keys,mapType=payload.mapType;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL('keys') || '';
         yield put({
           type: 'queryList',
           payload: {
-            currentPage,pageSize,mapType
+            currentPage,pageSize,mapType,key:keys
           },
         });
       } else {
@@ -163,6 +171,7 @@ export default {
           payload: {
             prolist:list,
             propageInfo: {
+              ...pagepack,
               current: payload.currentPage,
               pageSize: payload.pageSize,
               total: pageInfo.totalRecords,
@@ -210,15 +219,17 @@ export default {
             editInfo:null
           },
         }); 
-        var currentPage, pageSize;
+        var currentPage, pageSize,keys;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL('keys') || '';
         yield put({
           type: 'queryProList',
           payload: {
-            currentPage,pageSize
+            currentPage,pageSize,key:keys
           },
-        }); 
+        });
+
       } else {
         throw data.statusMsg;
       }
@@ -227,15 +238,16 @@ export default {
     * evaProbDelete({ payload }, { call, put }) {     
       const data = yield call(services.evaProbDelete, payload);
       if (data.statusCode === 200) {
-        var currentPage, pageSize;
+        var currentPage, pageSize,keys;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL('keys') || '';
         yield put({
           type: 'queryProList',
           payload: {
-            currentPage,pageSize
+            currentPage,pageSize,key:keys
           },
-        }); 
+        });
       } else {
         throw data.statusMsg;
       }
@@ -330,6 +342,7 @@ export default {
           payload: {
             authlist:list,
             authpageInfo: {
+              ...pagepack,
               current: payload.currentPage,
               pageSize: payload.pageSize,
               total: pageInfo.totalRecords,
@@ -377,15 +390,19 @@ export default {
             editInfo:null
           },
         }); 
-        var currentPage, pageSize;
+        yield put({
+          type: 'evaUserTop',
+        });          
+        var currentPage, pageSize,keys;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL('keys') || '';
         yield put({
           type: 'evaUserList',
           payload: {
-            currentPage,pageSize
+            currentPage,pageSize,key:keys
           },
-        }); 
+        });        
       } else {
         throw data.statusMsg;
       }
@@ -394,13 +411,14 @@ export default {
     * evaUserDelete({ payload }, { call, put }) {     
       const data = yield call(services.evaUserDelete, payload);
       if (data.statusCode === 200) {
-        var currentPage, pageSize;
+        var currentPage, pageSize,keys;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL('keys') || '';
         yield put({
           type: 'evaUserList',
           payload: {
-            currentPage,pageSize
+            currentPage,pageSize,key:keys
           },
         }); 
       } else {

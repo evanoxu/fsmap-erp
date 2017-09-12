@@ -277,6 +277,7 @@ class Modals extends React.Component {
       expandedKeys: [],
       autoExpandParent: true,
       selectedKeys: [],
+      isadmin:false,
     }
   } 
 
@@ -285,21 +286,26 @@ class Modals extends React.Component {
       expandedKeys,
       autoExpandParent: false,
     });
-    console.log(expandedKeys)
   }
   onCheck = (checkedKeys) => {
-    console.log(checkedKeys)
+    const { setFieldsValue} = this.props.form
     this.setState({
       checkedKeys,
+    },function () {
+      setFieldsValue({
+        hasMenus: checkedKeys
+      })
     });
+
   }
-  onSelect = (selectedKeys, info) => {
-    this.state.selectedKeys = selectedKeys
+  onChange = (checked) => {
+    this.setState({
+      isadmin:checked
+    })
   }
 
   handleOk = () => {
     const { validateFields,getFieldsValue,getFieldValue } = this.props.form
-    console.log(getFieldValue('menus'))
     validateFields((errors) => {
       if (errors) {
         return ;
@@ -309,15 +315,44 @@ class Modals extends React.Component {
       };
       data.isUperManage = data.isUperManage?1:0;
       data.hasMyMap = data.hasMyMap?1:0;
-      if(this.props.editInfo)  data.id = this.props.editInfo.id
-      console.log(data);
-      return false;        
-      onOk(data);
+      if(data.uperManageAccount) data.uperManageAccount = data.uperManageAccount.join(',')
+      data.hasMenus = data.hasMenus.join(',')
+      if(this.props.editInfo)  data.id = this.props.editInfo.id      
+      this.props.onOk(data);
     });
   };
   componentWillMount(){
+    const { editInfo } = this.props
+    var init = {
+      id:'',
+      account: '',
+      password: '',
+      name: '',
+      telphone: '',
+      state: '0',
+      isUperManage: false,
+      uperManageAccount: [],
+      menus: [],
+      hasMyMap: false,
+    }  
+    if(editInfo){
+      init = {
+        id:editInfo.id,
+        account: editInfo.account,
+        password: editInfo.password,
+        name: editInfo.name,
+        telphone: editInfo.telphone,
+        state: editInfo.state,
+        isUperManage: Number(editInfo.isUperManage)?true:false,
+        uperManageAccount: editInfo.uperManageAccount?editInfo.uperManageAccount.split(','):[],
+        hasMenus: editInfo.evaMenus?editInfo.evaMenus.split(','):[],
+        hasMyMap: Number(editInfo.hasMyMap)?true:false,
+      }    
+    }      
     this.setState({
-      expandedKeys: this.props.open        
+      expandedKeys: this.props.open,      
+      isadmin: this.props.editInfo?Number(this.props.editInfo.isUperManage)?true:false:false,
+      init
     })   
   }
 
@@ -341,33 +376,10 @@ class Modals extends React.Component {
       onOk: this.handleOk,
     };
 
-    var init = {
-      id:'',
-      account: '',
-      password: '',
-      name: '',
-      telphone: '',
-      state: '0',
-      isUperManage: false,
-      uperManageAccount: [],
-      menus: [],
-      hasMyMap: false,
-    }  
-    if(editInfo){
-      init = {
-        id:editInfo.id,
-        account: editInfo.account,
-        password: editInfo.password,
-        name: editInfo.name,
-        telphone: editInfo.telphone,
-        state: editInfo.state,
-        isUperManage: Number(editInfo.isUperManage)?true:false,
-        uperManageAccount: editInfo.uperManageAccount?editInfo.uperManageAccount.split(','):[],
-        menus: editInfo.menus?editInfo.menus.split(','):[],
-        hasMyMap: Number(editInfo.hasMyMap)?true:false,
-      }    
-    }    
-    console.log(init)
+  
+ 
+
+
     const loop = data => data.map((item) => {
       if (item.childList&&item.childList.length) {
         return (
@@ -378,10 +390,14 @@ class Modals extends React.Component {
       }
       return <TreeNode key={item.id} title={item.typeName||item.subTypeName} />;
     });
-    const children = [];
-    for (let i = 10; i < 36; i++) {
-      children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-    }   
+
+
+    const uperOption = uper.map((item) => {
+      return <Option key={item.account}>{item.account}</Option>
+    })
+
+    var init = this.state.init
+
     return (
       <Modal {...modalOpts}>
         <Form layout="horizontal">
@@ -395,11 +411,27 @@ class Modals extends React.Component {
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem label="新密码" {...formItemLayout}>
-            {getFieldDecorator('password', {
-              initialValue: '',
-            })(<Input placeholder="输入您要设置的新密码"/>)}
-          </FormItem>
+          {
+            init.id
+            ?
+            <FormItem label="新密码" {...formItemLayout}>
+              {getFieldDecorator('password', {
+                initialValue: '',
+              })(<Input placeholder="输入您要设置的新密码"/>)}
+            </FormItem>
+            : 
+            <FormItem label="密码" {...formItemLayout}>
+              {getFieldDecorator('password', {
+                initialValue: '',
+                rules: [
+                  {
+                    required: true,
+                  },
+                ],                
+              })(<Input placeholder="输入您要设置的密码"/>)}
+            </FormItem>                       
+          }
+
           <FormItem label="昵称" {...formItemLayout}>
             {getFieldDecorator('name', {
               initialValue: init.name,
@@ -410,16 +442,19 @@ class Modals extends React.Component {
               ],
             })(<Input />)}
           </FormItem>
-          <FormItem label="电话" {...formItemLayout}>
-            {getFieldDecorator('telphone', {
-              initialValue: init.telphone,
-              rules: [
-                {
-                  required: true,
-                },
-              ],
-            })(<Input />)}
-          </FormItem>                              
+          {
+            false &&
+            <FormItem label="电话" {...formItemLayout}>
+              {getFieldDecorator('telphone', {
+                initialValue: init.telphone,
+                rules: [
+                  {
+                    required: true,
+                  },
+                ],
+              })(<Input />)}
+            </FormItem>
+          }                              
           <FormItem label="账号状态" {...formItemLayout}>
             {getFieldDecorator('state', {
               initialValue: String(init.state),
@@ -444,25 +479,28 @@ class Modals extends React.Component {
               initialValue: init.isUperManage,
               valuePropName: 'checked' 
             })(
-              <Switch />
+              <Switch checkedChildren="是" unCheckedChildren="否" onChange={this.onChange}/>
             )}
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="上级部门"
-          >
-            {getFieldDecorator('uperManageAccount', {
-              initialValue: init.uperManageAccount,
-            })(
-              <Select
-                mode="multiple"
-                style={{ width: '100%' }}
-                placeholder="请选择一个或者多个"
-              >
-                {children}
-              </Select>
-            )}
-          </FormItem>        
+          {
+            !this.state.isadmin&&
+            <FormItem
+              {...formItemLayout}
+              label="上级部门"
+            >
+              {getFieldDecorator('uperManageAccount', {
+                initialValue: init.uperManageAccount,
+              })(
+                <Select
+                  mode="multiple"
+                  style={{ width: '100%' }}
+                  placeholder="请选择一个或者多个"
+                >
+                  {uperOption}
+                </Select>
+              )}
+            </FormItem>  
+          }       
           <FormItem
             {...formItemLayout}
             label="自定义地图权限"
@@ -471,16 +509,21 @@ class Modals extends React.Component {
               initialValue: init.hasMyMap,
               valuePropName: 'checked' 
             })(
-              <Switch />
+              <Switch checkedChildren="有" unCheckedChildren="无" />
             )}          
           </FormItem> 
           <FormItem
             {...formItemLayout}
             label="管理权限"
           >
-            {getFieldDecorator('menus', {
-              initialValue: init.menus,
-              valuePropName: 'selectedKeys' 
+            {getFieldDecorator('hasMenus', {
+              initialValue: init.hasMenus,
+              valuePropName: 'checkedKeys',
+              rules: [
+                {
+                  required: true,
+                },
+              ],               
             })(
               <Tree
                 checkable

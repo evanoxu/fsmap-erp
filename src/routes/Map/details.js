@@ -100,7 +100,7 @@ const Mapdetails = ({ map, dispatch, location, loading }) => {
       type: dstype,
       account,
     };
-    console.log('删除', data);
+    //console.log('删除', data);
     dispatch({
       type: 'map/detailDelete',
       payload: data,

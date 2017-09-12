@@ -55,11 +55,19 @@ const Filter = ({
   return (
     <Row gutter={24}>
       <Col {...ColProps} md={{ span: 6 }}>
-        {getFieldDecorator('keys', { initialValue: keys })(<Search placeholder="输入关键词" size="large" />)}
+        {
+          onFilterChange&&
+          getFieldDecorator('keys', { initialValue: keys })(<Input placeholder="输入关键词" size="large" />)
+        }      
       </Col>
       <Col {...TwoColProps} md={{ span: 8 }}>
-        <Button type="primary" size="large" style={{ marginRight: 16 }} onClick={handleSubmit}>查询</Button>
-        <Button size="large" onClick={handleReset}>重置</Button>
+        {
+          onFilterChange&&
+          <div>
+            <Button type="primary" size="large" style={{ marginRight: 16 }} onClick={handleSubmit}>查询</Button>
+            <Button size="large" onClick={handleReset}>重置</Button>
+          </div>
+        }
       </Col>
       <Col {...TwoColProps} md={{ span: 10 }}>
         <Button size="large" type="primary" style={{ float: 'right' }} onClick={handleAddClick}>新增</Button>

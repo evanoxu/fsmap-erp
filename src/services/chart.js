@@ -16,3 +16,11 @@ export async function chartUpDown(data) {
     data: data
   });
 }
+
+export async function chartDelete(data) {
+  return Fetch.default({
+    method: 'POST',
+    url: APIPath.CHARTDELETE+data.id,
+    data: data
+  });
+}

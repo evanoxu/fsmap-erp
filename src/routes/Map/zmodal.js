@@ -67,7 +67,7 @@ const Modals = ({
   // 宽带专题图标上传回调数据
   const handlePicChange = (type, info) => {
     let filesList = info.file;
-    console.log(filesList)
+    //console.log(filesList)
     if (filesList.status == 'done') {
       const { data } = filesList.response;
       if (type == 'typepic') {

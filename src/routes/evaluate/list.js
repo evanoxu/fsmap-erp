@@ -88,8 +88,18 @@ const List = ({ mapType, datass, location, loading, onDeleteItem, onEditItem, ..
       {
         title: '图片',
         dataIndex: 'evaPics', 
-        render: (text, { evaPics }) => (
-          <span>{evaPics&&evaPics.length&&evaPics.map((k, i) => (<img key={i} src={k} width="10" height="10" />))}</span>
+        render: (text) => (
+          <span>
+          {
+            text&&text.length
+            ?
+            text.map((k, i) => 
+              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100" height="100" /></a>)
+            )
+            :
+            '无'
+          }
+          </span>  
         ),
         width:'10%'          
       }, 
@@ -107,10 +117,10 @@ const List = ({ mapType, datass, location, loading, onDeleteItem, onEditItem, ..
         render: (text, { id,evaluationNo}) => (
           <span>
             <Popconfirm title="确定完成吗?" onConfirm={handleEditClick.bind(null, evaluationNo)}>
-              <Button  style={{ marginRight: 4 }} type="primary">完成</Button>
+              <Button  style={{ margin: '2px' }} type="primary">完成</Button>
             </Popconfirm>          
             <Popconfirm title="确定删除吗?" onConfirm={handleDeleteClick.bind(null, evaluationNo)}>
-              <Button type="danger">删除</Button>
+              <Button style={{ margin: '2px' }} type="danger">删除</Button>
             </Popconfirm>
           </span>
         ),
@@ -147,11 +157,21 @@ const List = ({ mapType, datass, location, loading, onDeleteItem, onEditItem, ..
       {
         title: '图片',
         dataIndex: 'evaPics', 
-        render: (text, { evaPics }) => (
-          <span>{evaPics&&evaPics.length&&evaPics.map((k, i) => (<img key={i} src={k} width="10" height="10" />))}</span>
-        ),      
-        width:'20%'    
-      }, 
+        render: (text) => (
+          <span>
+          {
+            text&&text.length
+            ?
+            text.map((k, i) => 
+              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100" height="100" /></a>)
+            )
+            :
+            '无'
+          }
+          </span>  
+        ),
+        width:'20%'          
+      },  
       {
         title: '问题状态',
         dataIndex: 'status',
