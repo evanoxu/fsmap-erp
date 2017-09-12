@@ -176,8 +176,52 @@ const Routers = ({ history, app }) => {
             }, 'industrydetails');
           },
         },
+
+        // 4.智慧应用商店
         {
-          path: 'evaluate/map/',
+          path: 'store/app',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/store'));
+              cb(null, require('./routes/store/app'));
+            }, 'store/app');
+          },
+        },    
+        {
+          path: 'store/needs',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/store'));
+              cb(null, require('./routes/store/app'));
+            }, 'store/needs');
+          },
+        }, 
+
+        {
+          path: 'store/needs/:id',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/store'));
+              cb(null, require('./routes/store/needs'));
+            }, 'store/needs/detail');
+          },
+        },
+
+        // 5.城市大数据
+        {
+          path: 'chart/city',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/chart'));
+              cb(null, require('./routes/chart/city'));
+            }, 'chart/city');
+          },
+        }, 
+
+
+        // 6.服务评价                    
+        {
+          path: 'evaluate/map',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
               registerModel(app, require('./models/evaluate'));
@@ -186,16 +230,16 @@ const Routers = ({ history, app }) => {
           },
         },
         {
-          path: 'evaluate/public/',
+          path: 'evaluate/public',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
               registerModel(app, require('./models/evaluate'));
-              cb(null, require('./routes/evaluate/public'));
+              cb(null, require('./routes/evaluate/map'));
             }, 'evaluatepublic');
           },
         },
         {
-          path: 'evaluate/auth/',
+          path: 'evaluate/auth',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
               registerModel(app, require('./models/evaluate'));
@@ -204,12 +248,69 @@ const Routers = ({ history, app }) => {
           },
         },
         {
-          path: 'evaluate/problem/',
+          path: 'evaluate/problem',
           getComponent(nextState, cb) {
             require.ensure([], (require) => {
               registerModel(app, require('./models/evaluate'));
               cb(null, require('./routes/evaluate/problem'));
             }, 'evaluateproblem');
+          },
+        },
+
+        // 7.消息管理
+        {
+          path: 'msg/login-act',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/msg'));
+              cb(null, require('./routes/msg/act'));
+            }, 'msg/act');
+          },
+        },
+        {
+          path: 'msg/store-act',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/msg'));
+              cb(null, require('./routes/msg/act'));
+            }, 'msg/act');
+          },
+        },                 
+        {
+          path: 'msg/admin',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/msg'));
+              cb(null, require('./routes/msg/admin'));
+            }, 'msg/admin');
+          },
+        }, 
+
+        {
+          path: 'user/manage',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/user'));
+              cb(null, require('./routes/User/manage'));
+            }, 'usermanage');
+          },
+        },
+        {
+          path: 'user/role',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/user'));
+              cb(null, require('./routes/User/role'));
+            }, 'userrole');
+          },
+        },
+        {
+          path: 'user/menu',
+          getComponent(nextState, cb) {
+            require.ensure([], (require) => {
+              registerModel(app, require('./models/user'));
+              cb(null, require('./routes/User/menu'));
+            }, 'usermenu');
           },
         },
       ],
