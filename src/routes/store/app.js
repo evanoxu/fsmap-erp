@@ -80,7 +80,7 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
         width:'10%',
         render: (text) => (
           <div>
-            <a style={{ margin: '4px',display:'block' }} target="_blank" href={text} target="_blank"><img src={text} width="100" height="100" /></a>
+            <a style={{ margin: '4px',display:'block' }} target="_blank" href={text} target="_blank"><img src={text} width="100" /></a>
           </div>  
         ),        
       },
@@ -94,7 +94,7 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
             text
             ?
             text.map((k, i) => 
-              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100" height="100" /></a>)
+              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100" /></a>)
             )
             :
             '无'
@@ -205,7 +205,7 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
             text
             ?
             text.map((k, i) => 
-              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100" height="100" /></a>)
+              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100"  /></a>)
             )
             :
             '无'

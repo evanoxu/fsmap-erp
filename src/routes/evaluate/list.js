@@ -94,7 +94,7 @@ const List = ({ mapType, datass, location, loading, onDeleteItem, onEditItem, ..
             text&&text.length
             ?
             text.map((k, i) => 
-              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100" height="100" /></a>)
+              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100" /></a>)
             )
             :
             '无'
@@ -163,7 +163,7 @@ const List = ({ mapType, datass, location, loading, onDeleteItem, onEditItem, ..
             text&&text.length
             ?
             text.map((k, i) => 
-              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100" height="100" /></a>)
+              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100" /></a>)
             )
             :
             '无'

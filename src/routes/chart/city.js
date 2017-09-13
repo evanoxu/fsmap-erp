@@ -61,7 +61,7 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
       width:'20%',
       render: (text) => (
         <div>
-          <a style={{ margin: '4px',display:'block' }} target="_blank" href={text} target="_blank"><img src={text} width="100" height="100" /></a>
+          <a style={{ margin: '4px',display:'block' }} target="_blank" href={text} target="_blank"><img src={text} width="100" /></a>
         </div> 
       ),        
     },                     
