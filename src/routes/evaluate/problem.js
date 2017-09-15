@@ -7,6 +7,7 @@ import { Tabs, Table, Button, Popconfirm } from 'antd';
 import { classnames } from '../../utils';
 import AnimTableBody from '../../components/DataTable/AnimTableBody';
 // import styles from './list.less';
+import Filter from './filter';
 import Modal from './problemModal';
 
 const mapType = {
@@ -90,7 +91,7 @@ const MapManage = ({ app, evaluate,dispatch, location, loading }) => {
     {
       title: '所属板块',
       dataIndex: 'mapType',
-      width:'20%',
+      width:'10%',
       render: (text) => (
         <span>
         {
@@ -105,15 +106,25 @@ const MapManage = ({ app, evaluate,dispatch, location, loading }) => {
       width:'20%'
     },   
     {
-      title: '更新时间',
-      dataIndex: 'lastUpdateDate',
-      width:'25%',
-      render: (text, { lastUpdateDate,createDate }) => (
+      title: '更新账号',
+      dataIndex: 'createName',
+      width:'20%',
+      render: (text, { lastUpdateName }) => (
         <span>
-        {lastUpdateDate||createDate}
+        {lastUpdateName||text}
         </span>
       ),      
-    },     
+    },       
+    {
+      title: '更新时间',
+      dataIndex: 'createDate',
+      width:'20%',
+      render: (text, { lastUpdateDate }) => (
+        <span>
+        {lastUpdateDate||text}
+        </span>
+      ),      
+    }, 
     {
       title: '操作',
       key: 'operation',
@@ -128,11 +139,34 @@ const MapManage = ({ app, evaluate,dispatch, location, loading }) => {
       width:'25%'
     },
   ];   
+  //查询数据
+  const filterProps = {
+    placeholder:'请输入你要搜索的问题类型',
+    filter: {
+      ...location.query,
+    },
+    onFilterChange(value) {
+      const { query, pathname } = location;
+      dispatch(routerRedux.push({
+        pathname,
+        query: {
+          ...value,
+          page: 1,
+          pageSize: query.pageSize,
+        },
+      }));
+    },  
+    onAdd() {
+      handleEditClick()
+    },       
+  };
+
+
 
 	return (
     <div className="content-inner">
       {modalVisible && <Modal {...modalProps} />}    
-      <div style={{paddingBottom:'10px',textAlign:'left'}}><Button className="content-btn" type="primary" onClick={handleEditClick.bind(null, null)}>新增</Button></div>
+      <Filter {...filterProps}/>
       <Table
         pagination={propageInfo}
         columns={columns}

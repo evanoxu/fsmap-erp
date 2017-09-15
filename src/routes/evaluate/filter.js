@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Form, Button, Row, Col, Input } from 'antd';
 
+// 引入搜索框
+const Search = Input.Search;
+
 // 引入样式
 const ColProps = {
   xs: 24,
@@ -18,6 +21,7 @@ const TwoColProps = {
 const Filter = ({
   placeholder,
   onFilterChange,
+  onAdd,
   filter,
   form: {
     getFieldDecorator,
@@ -43,6 +47,11 @@ const Filter = ({
   };
   const { keys } = filter;
 
+  // 新增按钮
+  const handleAddClick = () => {
+    // 判断当前属于哪个管理
+    onAdd();
+  };
 
   return (
     <Row gutter={24}>
@@ -53,6 +62,12 @@ const Filter = ({
         <Button type="primary" size="large" style={{ marginRight: 16 }} onClick={handleSubmit}>查询</Button>
         <Button size="large" onClick={handleReset}>重置</Button>
       </Col>
+      {
+        onAdd&&
+        <Col {...TwoColProps} md={{ span: 10 }}>
+          <Button size="large" type="primary" style={{ float: 'right' }} onClick={handleAddClick}>新增</Button>
+        </Col>        
+      }
     </Row>
   );
 };

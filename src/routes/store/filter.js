@@ -16,6 +16,7 @@ const TwoColProps = {
 };
 
 const Filter = ({
+  placeholder,
   onFilterChange,
   filter,
   form: {
@@ -41,12 +42,10 @@ const Filter = ({
     handleSubmit();
   };
   const { keys } = filter;
-
-
   return (
     <Row gutter={24}>
       <Col {...ColProps} md={{ span: 6 }}>
-        {getFieldDecorator('keys', { initialValue: keys })(<Input placeholder="输入关键词" size="large" />)}
+        {getFieldDecorator('keys', { initialValue: keys })(<Input placeholder={placeholder||'输入关键词'} size="large" />)}
       </Col>
       <Col {...TwoColProps} md={{ span: 8 }}>
         <Button type="primary" size="large" style={{ marginRight: 16 }} onClick={handleSubmit}>查询</Button>

@@ -25,10 +25,8 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
     })
   }
 
-  // 删除按钮
+  // 发送按钮
   const handleSend = (id) => {
-    console.log(id)
-    return false;
     dispatch({
       type: 'msg/msgSend',
       payload: {
@@ -79,23 +77,40 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
       width:'20%'
     },                     
     {
-      title: '创建者',
+      title: '更新账号',
       dataIndex: 'createName',
-      width:'10%'
-    },  
+      width:'10%',
+      render: (text, { lastUpdateName }) => (
+        <span>
+        {lastUpdateName||text}
+        </span>
+      ),      
+    },       
     {
-      title: '创建时间',
+      title: '更新时间',
       dataIndex: 'createDate',
-      width:'10%'
+      width:'20%',
+      render: (text, { lastUpdateDate }) => (
+        <span>
+        {lastUpdateDate||text}
+        </span>
+      ),      
     },                
     {
       title: '操作',
       key: 'operation',
-      render: (text,{uid,id}) => (
+      render: (text,{uid,id,state}) => (
         <div>
-            <Popconfirm title="确定发送吗?" onConfirm={handleSend.bind(null, id)}>
-              <Button type="primary" style={{ margin: '0 2px' }}>发送</Button>
-            </Popconfirm>
+            {
+              Number(state)
+              ?
+              <Button type="primary" disabled style={{ margin: '0 2px' }}>已发送</Button>
+              :
+              <Popconfirm title="确定发送吗?" onConfirm={handleSend.bind(null, id)}>
+                <Button type="primary" style={{ margin: '0 2px' }}>发送</Button>
+              </Popconfirm>              
+            }
+
             <Popconfirm title="确定删除吗?" onConfirm={handleClick.bind(null, uid)}>
               <Button type="danger" style={{ margin: '0 2px' }}>删除</Button>
             </Popconfirm>

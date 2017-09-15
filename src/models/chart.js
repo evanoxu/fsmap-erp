@@ -1,9 +1,10 @@
 
 
-import { queryURL, Storage } from '../utils';
+import { queryURL, Storage, Config } from '../utils';
 import { routerRedux } from 'dva/router';
-
 import * as services from '../services/chart';
+
+const pagepack = Config.pagepack
 
 export default {
 
@@ -11,7 +12,7 @@ export default {
 
   state: {
     list: [],
-    pageInfo: { current: 1, pageSize: 10, total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
+    pageInfo: pagepack,
     editInfo:null,
     modalVisible: false,
   },
@@ -55,6 +56,7 @@ export default {
           payload: {
             list,
             pageInfo: {
+              ...pagepack,
               current: payload.currentPage,
               pageSize: payload.pageSize,
               total: pageInfo.totalRecords,
@@ -74,7 +76,7 @@ export default {
         var currentPage, pageSize, keys;
         currentPage = Number(queryURL('page') || 1)
         pageSize = Number(queryURL('pageSize') || 10)
-        keys = queryURL(keys) || '';
+        keys = queryURL('keys') || '';
         yield put({
           type: 'queryList',
           payload: {
@@ -85,6 +87,25 @@ export default {
         throw data.statusMsg;
       }
     },
+
+    * chartDelete({ payload }, { call, put }) {
+      const data = yield call(services.chartDelete, payload);
+      if (data.statusCode === 200) {
+        var currentPage, pageSize, keys;
+        currentPage = Number(queryURL('page') || 1)
+        pageSize = Number(queryURL('pageSize') || 10)
+        keys = queryURL('keys') || '';
+        yield put({
+          type: 'queryList',
+          payload: {
+            currentPage,pageSize,key:keys
+          },
+        });
+      } else {
+        throw data.statusMsg;
+      }
+    },
+    
     
   },
 

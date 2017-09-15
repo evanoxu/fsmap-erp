@@ -13,7 +13,7 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
   const { list, pageInfo, editInfo, modalVisible } = chart;
   const { pathname } = location;
 
-  // 删除按钮
+  // 上下按钮
   const handleClick = (type,id) => {
     dispatch({
       type: 'chart/chartUpDown',
@@ -23,6 +23,14 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
     })
   }
 
+  const handleDelete = (id) => {
+    dispatch({
+      type: 'chart/chartDelete',
+      payload: {
+        id,account:app.user.info.account
+      },
+    })
+  }
 
   // 设置页面数据
   const getBodyWrapperProps = {
@@ -53,8 +61,8 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
       width:'20%',
       render: (text) => (
         <div>
-          <img src={`${text}`}/>
-        </div>  
+          <a style={{ margin: '4px',display:'block' }} target="_blank" href={text} target="_blank"><img src={text} width="100" /></a>
+        </div> 
       ),        
     },                     
     {
@@ -76,14 +84,17 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
             state==1
             ?  
             <Popconfirm title="确定下架吗?" onConfirm={handleClick.bind(null, '2',id)}>
-              <Button type="danger">下架</Button>
+              <Button type="" style={{ margin: '2px' }}>下架</Button>
             </Popconfirm>
             :
             <Popconfirm title="确定上架吗?" onConfirm={handleClick.bind(null, '1',id)}>
-              <Button type="primary">上架</Button>
+              <Button type="primary" style={{ margin: '2px' }}>上架</Button>
             </Popconfirm>              
           }
-        </div>  
+          <Popconfirm title="确定删除吗?" onConfirm={handleDelete.bind(null,id)}>
+            <Button type="danger" style={{ margin: '2px' }}>删除</Button>
+          </Popconfirm>               
+        </div>         
       ),
       width:'10%'
     },
@@ -109,6 +120,7 @@ const MapManage = ({ app, chart ,dispatch, location, loading }) => {
 
   // 查询数据
   const filterProps = {
+    placeholder:'请输入你要搜索的标题',
     filter: {
       ...location.query,
     },

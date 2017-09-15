@@ -94,13 +94,13 @@ const Zhuanti = ({
     onOk(data) {
       // 根据判断分别提交处理
       if (ztype === 'add') {
-        console.log('新增');
+        //console.log('新增');
         dispatch({
           type: 'map/addTypeData',
           payload: data,
         });
       } else {
-        console.log('编辑');
+        //console.log('编辑');
         dispatch({
           type: 'map/saveTypeData',
           payload: data,

@@ -7,13 +7,12 @@ import { Tabs, Table, Button, Popconfirm } from 'antd';
 import { classnames } from '../../utils';
 import AnimTableBody from '../../components/DataTable/AnimTableBody';
 // import styles from './list.less';
-import Filter from './filter';
+// import Filter from './filter';
 
 const MapManage = ({ app, store ,dispatch, location, loading }) => {
   const { list, pageInfo, editInfo, modalVisible } = store;
   const { pathname } = location;
-
-
+  
   // 设置页面数据
   const getBodyWrapperProps = {
     page: location.query.page,
@@ -68,26 +67,25 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
   };
 
   // 查询数据
-  const filterProps = {
-    filter: {
-      ...location.query,
-    },
-    onFilterChange(value) {
-      const { query, pathname } = location;
-      dispatch(routerRedux.push({
-        pathname,
-        query: {
-          ...value,
-          page: 1,
-          pageSize: query.pageSize,
-        },
-      }));
-    },
-  };
+  // const filterProps = {
+  //   filter: {
+  //     ...location.query,
+  //   },
+  //   onFilterChange(value) {
+  //     const { query, pathname } = location;
+  //     dispatch(routerRedux.push({
+  //       pathname,
+  //       query: {
+  //         ...value,
+  //         page: 1,
+  //         pageSize: query.pageSize,
+  //       },
+  //     }));
+  //   },
+  // };
 
   return (
     <div className="content-inner">  
-      <Filter {...filterProps} />
       <Table
         { ...tableProps }
         rowKey={record => record.id}

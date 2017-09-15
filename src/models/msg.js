@@ -1,8 +1,10 @@
 
 
-import { queryURL, Storage } from '../utils';
+import { queryURL, Storage, Config } from '../utils';
 import { routerRedux } from 'dva/router';
 import * as services from '../services/msg';
+
+const pagepack = Config.pagepack
 
 export default {
 
@@ -10,7 +12,7 @@ export default {
 
   state: {
     list: [],
-    pageInfo: { current: 1, pageSize: 10, total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
+    pageInfo: pagepack,
     editInfo:null,
     modalVisible: false,
   },
@@ -21,14 +23,14 @@ export default {
         const { pathname, query} = location;
         switch (pathname){
           case '/msg/admin':
-            var currentPage, pageSize
+            var currentPage, pageSize, keys
             currentPage = Number(query.page || 1);
             pageSize = Number(query.pageSize || 10);
-
+            keys = query.keys || '';
             dispatch({
               type: 'queryList',
               payload: {
-                currentPage,pageSize
+                currentPage,pageSize,key:keys
               },
             });          
           break;
@@ -75,6 +77,7 @@ export default {
           payload: {
             list,
             pageInfo: {
+              ...pagepack,
               current: payload.currentPage,
               pageSize: payload.pageSize,
               total: pageInfo.totalRecords,
@@ -166,6 +169,7 @@ export default {
           payload: {
             list,
             pageInfo: {
+              ...pagepack,
               current: payload.currentPage,
               pageSize: payload.pageSize,
               total: pageInfo.totalRecords,

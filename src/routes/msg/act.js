@@ -17,6 +17,19 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
   var type = '1'
   if(location.pathname=='/msg/login-act') type = '2'
 
+  const typeJson = {
+    1: {
+      width: '418',
+      height: '264'
+    },
+    2: {
+      width: '500',
+      height: '300'
+    }    
+  }  
+
+  const px = typeJson[type];
+
   // 删除按钮
   const handleClick = (id) => {
     dispatch({
@@ -72,43 +85,43 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
     {
       title: '图片',
       dataIndex: 'imgUrl',
-      width:'20%',
+      width:'15%',
       render: (text) => (
         <div>
-          <img src={`${text}`}/>
+          <a target="_blank" href={text} target="_blank"><img src={text} width={px.width*0.2} height={px.height*0.2} /></a>
         </div>  
       ),       
     },
     {
       title: '图片URL',
       dataIndex: 'linkUrl',
-      width:'10%',
+      width:'15%',
       render: (text) => (
         <div>
           <a target="_blank" href={`${text}`}>{text}</a>
         </div>  
       ),       
-    },          
+    },                
     {
-      title: '创建者',
+      title: '更新账号',
       dataIndex: 'createName',
-      width:'10%'
-    },  
-    {
-      title: '创建时间',
-      dataIndex: 'createDate',
-      width:'10%'
-    },               
-    {
-      title: '更新者',
-      dataIndex: 'lastUpdateName',
-      width:'10%'
-    },  
+      width:'10%',
+      render: (text, { lastUpdateName }) => (
+        <span>
+        {lastUpdateName||text}
+        </span>
+      ),      
+    },       
     {
       title: '更新时间',
-      dataIndex: 'lastUpdateDate',
-      width:'10%'
-    },                 
+      dataIndex: 'createDate',
+      width:'10%',
+      render: (text, { lastUpdateDate }) => (
+        <span>
+        {lastUpdateDate||text}
+        </span>
+      ),      
+    },                
     {
       title: '操作',
       key: 'operation',
@@ -126,6 +139,7 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
 
   // 显示弹窗数据
   const modalProps = {
+    px,
     editInfo,
     visible: modalVisible,
     confirmLoading: loading.effects['msg/actSave'],
@@ -156,17 +170,6 @@ const MapManage = ({ app, msg ,dispatch, location, loading }) => {
   const filterProps = {
     filter: {
       ...location.query,
-    },
-    onFilterChange(value) {
-      const { query, pathname } = location;
-      dispatch(routerRedux.push({
-        pathname,
-        query: {
-          ...value,
-          page: 1,
-          pageSize: query.pageSize,
-        },
-      }));
     },
     onAdd() {
       handleSave()

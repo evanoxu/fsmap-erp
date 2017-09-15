@@ -19,6 +19,7 @@ const formItemLayout = {
 };
 
 const Modals = ({
+  px,
   editInfo,
   onOk,
   form: {
@@ -56,9 +57,6 @@ const Modals = ({
     });
   };
 
-  // 宽带专题图标
-  const deType = getFieldsValue();
-  const deTypePic = deType['imgUrl'];
 
   const propss = {
     action: APIPath.ACTUPLOAD,
@@ -94,16 +92,13 @@ const Modals = ({
     onOk: handleOk,
   };
 
-
+  const deTypePic = getFieldsValue()['imgUrl']||init.imgUrl;
   return (
     <Modal {...modalOpts}>
       <Form layout="horizontal">
-        <FormItem label="图片" {...formItemLayout}>
+        <FormItem label="图片" {...formItemLayout} extra={`请上传${px.width}*${px.height}像素的图片`}>
             <Row>
-              <Col span={2} style={{ width: 20, height: 20, margin: '6px 7px'}}>
-                <img width="20" height="20" src={deTypePic} />
-              </Col>
-              <Col span={20}>
+              <Col span={24}>
                 <Upload {...propss} onChange={handlePicChange.bind(null, 'imgUrl')} beforeUpload={handlePicUpload}>
                   {getFieldDecorator('imgUrl', {
                     initialValue: init.imgUrl,
@@ -117,6 +112,9 @@ const Modals = ({
                   )}
                 </Upload>
               </Col>
+            </Row>
+            <Row style={{paddingTop:'10px'}}>
+               <img width={px.width*0.5} height={px.height*0.5} src={deTypePic} />
             </Row>
         </FormItem>        
         <FormItem label="链接" {...formItemLayout}>

@@ -123,12 +123,14 @@ let API = {
   // 4.智慧应用商店
   storeList: 'appStore/dataList/',
   storeUpDown: 'appStore/appUpOrDown/',
+  storeDelete: 'appStore/appStoreDelete/',
   storeNeedsList: 'appStore/dataDetails/',
   storeNeedsDelete: 'appStore/xuqiuDelete/',
 
   // 5.城市大数据
   chartList: 'newBigData/adminList',
   chartUpDown: 'newBigData/dataUp/',
+  chartDelete: 'newBigData/deleteBigData/',
 
   // 6.服务评价
   evaList:'evaluation/adminEvaList/',
@@ -138,7 +140,7 @@ let API = {
   evaUserList: 'evauser/userList',
   evaUserAuth: 'evauser/userMenuList/',
   evaUserEdit: 'evauser/userEdit/',
-  evaUserSave: 'evauser/saveUser/',
+  evaUserSave: 'evauser/saveUser',
   evaUserDelete: 'evauser/userDelete/',
   evaUsercheckAccount: 'evauser/checkAccount/',
   evaUsercheckName: 'evauser/checkName/',
@@ -156,7 +158,7 @@ let API = {
   msgList: 'newuser/adminMsgList',
   msgSave: 'newuser/addAdminMsg',
   msgDelete: 'newuser/delAdminMsg',
-  msgSend: 'newuser/delAdminMsg',
+  msgSend: 'newuser/sendAdminMsg',
 
   actList: 'appStore/bannerList',
   actSave: 'appStore/adminAddBanner',

@@ -17,6 +17,13 @@ export async function storeUpDown(data) {
   });
 }
 
+export async function storeDelete(data) {
+  return Fetch.default({
+    method: 'POST',
+    url: APIPath.STOREDELETE+data.id,
+    data: data
+  });
+}
 
 
 export async function storeNeedsList(data) {

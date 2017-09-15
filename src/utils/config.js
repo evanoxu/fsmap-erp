@@ -322,5 +322,6 @@ module.exports = {
     list: 'list',
     add: 'add',
   },
+  pagepack:{ current: 1, pageSize: 10, total: 0, showSizeChanger: true, showQuickJumper: true, showTotal: total => `共有 ${total} 条数据` },
   openPages: ['/login'],
 };

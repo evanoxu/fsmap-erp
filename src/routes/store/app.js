@@ -26,7 +26,19 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
     })
   }
 
-  //  删除按钮
+  // 删除 应用网站
+  const handlestore = (id) => {
+    dispatch({
+      type: 'store/storeDelete',
+      payload: {
+        type:mapType,id,account:app.user.info.account
+      },
+    })
+  }
+
+  
+
+  //  删除需求
   const handleDelete = (id) => {
     dispatch({
       type: 'store/storeNeedsDelete',
@@ -48,13 +60,14 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
 
   // 设置宽带分类
   let columns;
-
+  let placeholder;
   if(mapType==1){
+    placeholder = '请输入你要搜索的应用/网站名';
     columns = [
       {
         title: 'ID',
         dataIndex: 'id',
-        width:'10%'
+        width:'5%'
       },
       {
         title: '应用/网站名',
@@ -67,14 +80,27 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
         width:'10%',
         render: (text) => (
           <div>
-            <img src={`${text}`}/>
+            <a style={{ margin: '4px',display:'block' }} target="_blank" href={text} target="_blank"><img src={text} width="100" /></a>
           </div>  
         ),        
       },
       {
         title: '截图',
         dataIndex: 'appImgsList',
-        width:'10%'
+        width:'10%',
+        render: (text) => (
+          <span>
+          {
+            text
+            ?
+            text.map((k, i) => 
+              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100" /></a>)
+            )
+            :
+            '无'
+          }
+          </span>  
+        )      
       },
       {
         title: '简介',
@@ -82,7 +108,7 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
         width:'10%',      
       },
       {
-        title: '链接',
+        title: '链接/应用',
         dataIndex: 'appUrl',
         width:'10%',
         render: (text) => (
@@ -92,24 +118,24 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
         ),        
       },                      
       {
-        title: '创建者',
+        title: '更新账号',
         dataIndex: 'createName',
-        width:'5%'
-      },  
-      {
-        title: '创建时间',
-        dataIndex: 'createDate',
-        width:'10%'
-      }, 
-      {
-        title: '更新者',
-        dataIndex: 'lastUpdateName',
-        width:'5%'
-      },  
+        width:'10%',
+        render: (text, { lastUpdateName }) => (
+          <span>
+          {lastUpdateName||text}
+          </span>
+        ),      
+      },       
       {
         title: '更新时间',
-        dataIndex: 'lastUpdateDate',
-        width:'10%'
+        dataIndex: 'createDate',
+        width:'10%',
+        render: (text, { lastUpdateDate }) => (
+          <span>
+          {lastUpdateDate||text}
+          </span>
+        ),      
       },                
       {
         title: '操作',
@@ -120,20 +146,23 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
               state==1
               ?  
               <Popconfirm title="确定下架吗?" onConfirm={handleClick.bind(null, '2',id)}>
-                <Button type="danger">下架</Button>
+                <Button type="" style={{ margin: '2px' }}>下架</Button>
               </Popconfirm>
               :
               <Popconfirm title="确定上架吗?" onConfirm={handleClick.bind(null, '1',id)}>
-                <Button type="primary">上架</Button>
+                <Button type="primary" style={{ margin: '2px' }}>上架</Button>
               </Popconfirm>              
             }
+            <Popconfirm title="确定删除吗?" onConfirm={handlestore.bind(null,id)}>
+              <Button type="danger" style={{ margin: '2px' }}>删除</Button>
+            </Popconfirm>               
           </div>  
         ),
         width:'10%'
       },
     ]; 
   }else{
-
+    placeholder = '请输入你要搜索的标题';
     columns = [
       {
         title: 'ID',
@@ -147,35 +176,75 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
       },     
       {
         title: '需求说明',
-        dataIndex: 'appName2',
+        dataIndex: 'appIntroduce',
         width:'20%'
       }, 
       {
         title: '附件',
-        dataIndex: 'appName3',
-        width:'10%'
+        dataIndex: 'appUrl',
+        width:'10%',
+        render: (text) => (
+          <div>
+          {
+            text
+            ?
+            <a target="_blank" href={text}>附件</a>
+            :
+            '无'
+          }
+          </div>
+        )        
       }, 
       {
         title: '图片',
-        dataIndex: 'appName4',
-        width:'20%'
+        dataIndex: 'appImgsList',
+        width:'20%',
+        render: (text) => (
+          <span>
+          {
+            text
+            ?
+            text.map((k, i) => 
+              (<a style={{ margin: '4px',display:'block' }} target="_blank" key={i} href={k} target="_blank"><img src={k} width="100"  /></a>)
+            )
+            :
+            '无'
+          }
+          </span>
+        ),        
       },                                 
       {
-        title: '创建者',
+        title: '更新账号',
         dataIndex: 'createName',
-        width:'10%'
-      },  
+        width:'10%',
+        render: (text, { lastUpdateName }) => (
+          <span>
+          {lastUpdateName||text}
+          </span>
+        ),      
+      },       
       {
-        title: '创建时间',
+        title: '更新时间',
         dataIndex: 'createDate',
-        width:'10%'
+        width:'10%',
+        render: (text, { lastUpdateDate }) => (
+          <span>
+          {lastUpdateDate||text}
+          </span>
+        ),      
       },                 
       {
         title: '操作',
         key: 'operation',
-        render: (text,{id,uid}) => (
+        render: (text,{id,uid,talkcount}) => (
           <div>
-            <Link to={`/store/needs/${uid}`}>查看回帖</Link>
+            {
+              talkcount
+              ? 
+              <Link to={`/store/needs/${uid}`}>查看回帖</Link>
+              :
+              <span>暂无回帖</span>
+            }
             <Popconfirm title="确定删除吗?" onConfirm={handleDelete.bind(null, id)}>
               <Button type="danger" style={{ margin: '0 2px' }}>删除</Button>
             </Popconfirm>            
@@ -207,6 +276,7 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
 
   // 查询数据
   const filterProps = {
+    placeholder,
     filter: {
       ...location.query,
     },
@@ -222,6 +292,7 @@ const MapManage = ({ app, store ,dispatch, location, loading }) => {
       }));
     },
   };
+
 
 	return (
     <div className="content-inner">  
